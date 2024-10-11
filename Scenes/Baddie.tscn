@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dveildymlcv35"]
+
+[ext_resource type="Script" path="res://Scenes/baddie.gd" id="1_hshta"]
+[ext_resource type="Texture2D" uid="uid://dkqocp8an6bae" path="res://Assets/Textures/baddie.png" id="2_j128o"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lenxq"]
+size = Vector2(8, 8)
+
+[node name="Baddie" type="CharacterBody2D"]
+y_sort_enabled = true
+collision_mask = 0
+script = ExtResource("1_hshta")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_j128o")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_lenxq")

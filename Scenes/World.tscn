@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://3sp3bywvuwsd"]
+
+[ext_resource type="PackedScene" uid="uid://bmkav27727osl" path="res://Scenes/Player.tscn" id="1_quwha"]
+[ext_resource type="PackedScene" uid="uid://dveildymlcv35" path="res://Scenes/Baddie.tscn" id="2_qy0o7"]
+
+[node name="World" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_quwha")]
+position = Vector2(111, 77)
+
+[node name="Baddie" parent="." instance=ExtResource("2_qy0o7")]
+position = Vector2(31, 83)
+
+[node name="Baddie2" parent="." instance=ExtResource("2_qy0o7")]
+position = Vector2(164, 120)
+
+[node name="Baddie3" parent="." instance=ExtResource("2_qy0o7")]
+position = Vector2(222, 44)
