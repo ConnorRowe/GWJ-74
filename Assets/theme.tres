@@ -1,0 +1,56 @@
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://k6kepquckgje"]
+
+[ext_resource type="Texture2D" uid="uid://bjeuwl25t18e0" path="res://Assets/Textures/ninepatch_2.png" id="1_akhou"]
+[ext_resource type="Texture2D" uid="uid://bae74652jjrvi" path="res://Assets/Textures/ninepatch_focus.png" id="1_rcgjr"]
+[ext_resource type="Texture2D" uid="uid://dwppsdvs8k0w4" path="res://Assets/Textures/ninepatch_1.png" id="2_koduo"]
+[ext_resource type="Texture2D" uid="uid://cr26t7pyk3t01" path="res://Assets/Textures/ninepatch_3.png" id="3_gvsnl"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ismuf"]
+texture = ExtResource("1_rcgjr")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u0gse"]
+texture = ExtResource("1_akhou")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cbrxy"]
+texture = ExtResource("2_koduo")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sqwfd"]
+texture = ExtResource("3_gvsnl")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[resource]
+Button/styles/focus = SubResource("StyleBoxTexture_ismuf")
+Button/styles/hover = SubResource("StyleBoxTexture_u0gse")
+Button/styles/normal = SubResource("StyleBoxTexture_cbrxy")
+Button/styles/pressed = SubResource("StyleBoxTexture_sqwfd")

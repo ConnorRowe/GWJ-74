@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://ffsnf3ms7u5j"]
+
+[ext_resource type="PackedScene" uid="uid://dveildymlcv35" path="res://Scenes/Baddie.tscn" id="1_1625t"]
+[ext_resource type="Script" path="res://Scenes/shooting_baddie.gd" id="2_xerv8"]
+
+[node name="ShootingBaddie" instance=ExtResource("1_1625t")]
+script = ExtResource("2_xerv8")
+speed = 0.0
+
+[node name="AttackTimer" type="Timer" parent="." index="3"]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

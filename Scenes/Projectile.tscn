@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://bdkmgds6cm8hv"]
+
+[ext_resource type="Script" path="res://Scenes/projectile.gd" id="1_1obxu"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Projectile.gdshader" id="1_y33gi"]
+[ext_resource type="Texture2D" uid="uid://cug5qje3b1o1v" path="res://Assets/Textures/projectile.png" id="2_2ygec"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cbmh4"]
+radius = 2.13
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ws4qo"]
+resource_local_to_scene = true
+shader = ExtResource("1_y33gi")
+shader_parameter/colour_a = Color(0.356863, 0.431373, 0.882353, 1)
+shader_parameter/colour_b = Color(0.372549, 0.803922, 0.894118, 1)
+
+[node name="Projectile" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_1obxu")
+
+[node name="Area2D" type="Area2D" parent="."]
+input_pickable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_cbmh4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_ws4qo")
+texture = ExtResource("2_2ygec")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

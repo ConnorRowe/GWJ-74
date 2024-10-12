@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3rrr2sykov13"]
+
+[ext_resource type="Script" path="res://Scenes/jiggler.gd" id="1_obxst"]
+
+[node name="Jiggler" type="Node"]
+script = ExtResource("1_obxst")

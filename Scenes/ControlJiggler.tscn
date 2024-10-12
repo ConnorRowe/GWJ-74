@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://g03jl3msomfx"]
+
+[ext_resource type="Script" path="res://Scenes/control_jiggler.gd" id="1_on0yy"]
+
+[node name="ControlJiggler" type="Node"]
+script = ExtResource("1_on0yy")

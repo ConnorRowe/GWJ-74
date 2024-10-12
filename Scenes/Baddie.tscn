@@ -1,18 +1,40 @@
-[gd_scene load_steps=4 format=3 uid="uid://dveildymlcv35"]
+[gd_scene load_steps=9 format=3 uid="uid://dveildymlcv35"]
 
 [ext_resource type="Script" path="res://Scenes/baddie.gd" id="1_hshta"]
+[ext_resource type="Texture2D" uid="uid://csjy4y21tnek2" path="res://Assets/Textures/shadow.png" id="2_71id0"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Coloured_Character.gdshader" id="2_546fy"]
 [ext_resource type="Texture2D" uid="uid://dkqocp8an6bae" path="res://Assets/Textures/baddie.png" id="2_j128o"]
+[ext_resource type="Texture2D" uid="uid://blm3vn6ijbwnc" path="res://Assets/Textures/baddie_fill.png" id="3_vdo3r"]
+[ext_resource type="PackedScene" uid="uid://d3rrr2sykov13" path="res://Scenes/Jiggler.tscn" id="6_hhnod"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lenxq"]
-size = Vector2(8, 8)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oyuf6"]
+shader = ExtResource("2_546fy")
+shader_parameter/fill_colour = Color(0.796078, 0.858824, 0.988235, 1)
+shader_parameter/fill_tex = ExtResource("3_vdo3r")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dlkq6"]
+radius = 3.16228
 
 [node name="Baddie" type="CharacterBody2D"]
 y_sort_enabled = true
-collision_mask = 0
+motion_mode = 1
 script = ExtResource("1_hshta")
 
+[node name="Shadow" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(0, 4)
+texture = ExtResource("2_71id0")
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_oyuf6")
 texture = ExtResource("2_j128o")
 
+[node name="DamageJiggler" parent="Sprite2D" instance=ExtResource("6_hhnod")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_skew_jiggle = 0.5
+max_rotation_jiggle = -20.0
+decay = 2.0
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_lenxq")
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_dlkq6")

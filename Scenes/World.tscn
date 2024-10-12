@@ -1,18 +1,33 @@
-[gd_scene load_steps=3 format=3 uid="uid://3sp3bywvuwsd"]
+[gd_scene load_steps=6 format=3 uid="uid://3sp3bywvuwsd"]
 
+[ext_resource type="Script" path="res://Scenes/world.gd" id="1_4u8o6"]
 [ext_resource type="PackedScene" uid="uid://bmkav27727osl" path="res://Scenes/Player.tscn" id="1_quwha"]
-[ext_resource type="PackedScene" uid="uid://dveildymlcv35" path="res://Scenes/Baddie.tscn" id="2_qy0o7"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Background.gdshader" id="2_mhla2"]
+[ext_resource type="Texture2D" uid="uid://d0n4yhohd2tlo" path="res://Assets/Textures/background.png" id="3_vnjh6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_if0dd"]
+shader = ExtResource("2_mhla2")
+shader_parameter/player_position = Vector2(0, 0)
 
 [node name="World" type="Node2D"]
+script = ExtResource("1_4u8o6")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -128
+
+[node name="Background" type="TextureRect" parent="CanvasLayer"]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_if0dd")
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_vnjh6")
+metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." instance=ExtResource("1_quwha")]
 position = Vector2(111, 77)
 
-[node name="Baddie" parent="." instance=ExtResource("2_qy0o7")]
-position = Vector2(31, 83)
+[node name="SpawnEnemyTimer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
 
-[node name="Baddie2" parent="." instance=ExtResource("2_qy0o7")]
-position = Vector2(164, 120)
-
-[node name="Baddie3" parent="." instance=ExtResource("2_qy0o7")]
-position = Vector2(222, 44)
+[connection signal="timeout" from="SpawnEnemyTimer" to="." method="_on_spawn_enemy_timer_timeout"]
