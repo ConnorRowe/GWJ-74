@@ -1,13 +1,26 @@
-[gd_scene load_steps=6 format=3 uid="uid://3sp3bywvuwsd"]
+[gd_scene load_steps=11 format=3 uid="uid://3sp3bywvuwsd"]
 
 [ext_resource type="Script" path="res://Scenes/world.gd" id="1_4u8o6"]
 [ext_resource type="PackedScene" uid="uid://bmkav27727osl" path="res://Scenes/Player.tscn" id="1_quwha"]
 [ext_resource type="Shader" path="res://Assets/Shaders/Background.gdshader" id="2_mhla2"]
 [ext_resource type="Texture2D" uid="uid://d0n4yhohd2tlo" path="res://Assets/Textures/background.png" id="3_vnjh6"]
+[ext_resource type="PackedScene" uid="uid://g03jl3msomfx" path="res://Scenes/ControlJiggler.tscn" id="4_t3nb6"]
+[ext_resource type="FontFile" uid="uid://bxpu632mf8itb" path="res://Assets/Font/Connor4px.ttf" id="4_wenbd"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_if0dd"]
 shader = ExtResource("2_mhla2")
 shader_parameter/player_position = Vector2(0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6kfie"]
+bg_color = Color(0.133333, 0.12549, 0.203922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cjfgw"]
+bg_color = Color(0.388235, 0.607843, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_i8qwe"]
+line_spacing = 0.0
+font = ExtResource("4_wenbd")
+font_size = 4
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_4u8o6")
@@ -23,11 +36,56 @@ offset_bottom = 40.0
 texture = ExtResource("3_vnjh6")
 metadata/_edit_use_anchors_ = true
 
+[node name="XPBorder" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -67.0
+offset_top = 1.0
+offset_right = -1.0
+offset_bottom = 5.0
+grow_horizontal = 0
+pivot_offset = Vector2(33, 2)
+color = Color(0, 0, 0, 1)
+
+[node name="XPProgressBar" type="ProgressBar" parent="CanvasLayer/XPBorder"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 65.0
+offset_bottom = 3.0
+pivot_offset = Vector2(32, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_6kfie")
+theme_override_styles/fill = SubResource("StyleBoxFlat_cjfgw")
+max_value = 10.0
+show_percentage = false
+
+[node name="XPJiggler" parent="CanvasLayer/XPBorder" instance=ExtResource("4_t3nb6")]
+scale_jiggle = Vector2(0.2, 0.2)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 1.0
+
+[node name="XPLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -94.0
+offset_top = 1.0
+offset_right = -67.0
+offset_bottom = 12.0
+grow_horizontal = 0
+text = "1"
+label_settings = SubResource("LabelSettings_i8qwe")
+horizontal_alignment = 2
+justification_flags = 0
+
 [node name="Player" parent="." instance=ExtResource("1_quwha")]
-position = Vector2(111, 77)
+position = Vector2(160, 90)
 
 [node name="SpawnEnemyTimer" type="Timer" parent="."]
 wait_time = 0.5
 autostart = true
 
+[connection signal="lvl_up" from="Player" to="." method="_on_player_lvl_up"]
+[connection signal="xp_changed" from="Player" to="." method="_on_player_xp_changed"]
 [connection signal="timeout" from="SpawnEnemyTimer" to="." method="_on_spawn_enemy_timer_timeout"]

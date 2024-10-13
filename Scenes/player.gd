@@ -1,22 +1,26 @@
 class_name Player
 extends CharacterBody2D
 
+signal xp_changed(new_xp)
+signal lvl_up(current_xp, next_xp_req, new_lvl)
+
 const PROJECTILE = preload("res://Scenes/Projectile.tscn")
 
-var health: int = 100
+var health := 100
+var xp := 0
+var lvl := 1
+var xp_req = 10
 const SPEED = 80.0
-@onready var health_progress_bar: ProgressBar = $ColorRect/HealthProgressBar
 var nearby_baddies := []
 var nearest_baddie : Baddie = null
-@onready var movement_jiggler: Node = $SpriteExtraParent/Sprite2D/MovementJiggler
+@onready var health_progress_bar: ProgressBar = $HealthBorder/HealthProgressBar
+@onready var movement_jiggler: Jiggler = $SpriteExtraParent/BodySprite/MovementJiggler
 @onready var damage_jiggler: Node = $SpriteExtraParent/DamageJiggler
 @onready var blood_particles: CPUParticles2D = $BloodParticles
-
-func _ready() -> void:
-	pass
+@onready var body_sprite: Sprite2D = $SpriteExtraParent/BodySprite
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	var dir := Vector2()
 	dir.x = Input.get_axis("move_left", "move_right")
 	dir.y = Input.get_axis("move_up", "move_down")
@@ -38,6 +42,8 @@ func take_damage(amount: int) -> void:
 	damage_jiggler.jiggle(.5)
 	blood_particles.emitting = true
 
+func set_body_colour(colour: Color) -> void:
+	body_sprite.material.set_shader_parameter("fill_colour", colour)
 
 func _on_enemy_monitor_area_2d_body_entered(body: Node2D) -> void:
 	if body is Baddie:
@@ -71,3 +77,27 @@ func _on_attack_timer_timeout() -> void:
 func _on_move_jiggle_timer_timeout() -> void:
 	if velocity.length() > 0:
 		movement_jiggler.jiggle(0.5)
+
+
+func set_player_colour(colour: Color) -> void:
+	body_sprite.material.set_shader_parameter("fill_colour", colour)
+
+
+func _on_pickup_area_2d_area_entered(area: Area2D) -> void:
+	# Pick up something
+	var area_parent = area.get_parent()
+	if area_parent is Gem:
+		add_xp(area_parent.xp)
+		SoundManager.pop()
+		area_parent.queue_free()
+
+
+func add_xp(_xp: int) -> void:
+	xp += _xp
+	xp_changed.emit(xp)
+	
+	if(xp >= xp_req):
+		lvl += 1
+		xp -= xp_req
+		xp_req *= 1.5
+		lvl_up.emit(xp, xp_req, lvl)

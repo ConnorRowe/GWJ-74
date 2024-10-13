@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://cen5b1ik3e3rr"]
+
+[ext_resource type="Shader" path="res://Assets/Shaders/RB_Replace.gdshader" id="1_jlmx8"]
+[ext_resource type="Script" path="res://Scenes/gem.gd" id="1_vy3ew"]
+[ext_resource type="Texture2D" uid="uid://pr8stgbt0fg7" path="res://Assets/Textures/Gem.png" id="2_ky5w7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5sqsy"]
+resource_local_to_scene = true
+shader = ExtResource("1_jlmx8")
+shader_parameter/replace_colour = Color(0.372549, 0.803922, 0.894118, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pdtk3"]
+radius = 3.0
+
+[node name="Gem" type="Node2D"]
+script = ExtResource("1_vy3ew")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_5sqsy")
+texture = ExtResource("2_ky5w7")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_pdtk3")

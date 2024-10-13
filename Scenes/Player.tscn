@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bmkav27727osl"]
+[gd_scene load_steps=13 format=3 uid="uid://bmkav27727osl"]
 
 [ext_resource type="Script" path="res://Scenes/player.gd" id="1_2lgkk"]
 [ext_resource type="Texture2D" uid="uid://pilafd6t6ucd" path="res://Assets/Textures/guy.png" id="1_fh86u"]
@@ -24,6 +24,9 @@ shader = ExtResource("2_k6n4a")
 shader_parameter/fill_colour = Color(0.215686, 0.580392, 0.431373, 1)
 shader_parameter/fill_tex = ExtResource("3_er7dl")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lj8a8"]
+size = Vector2(8, 8)
+
 [node name="Player" type="CharacterBody2D"]
 y_sort_enabled = true
 motion_mode = 1
@@ -32,14 +35,14 @@ script = ExtResource("1_2lgkk")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_i41ba")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="HealthBorder" type="ColorRect" parent="."]
 offset_left = -11.0
 offset_top = 5.0
 offset_right = 11.0
 offset_bottom = 9.0
 color = Color(0, 0, 0, 1)
 
-[node name="HealthProgressBar" type="ProgressBar" parent="ColorRect"]
+[node name="HealthProgressBar" type="ProgressBar" parent="HealthBorder"]
 layout_mode = 0
 offset_left = 1.0
 offset_top = 1.0
@@ -71,18 +74,18 @@ autostart = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="Shadow" type="Sprite2D" parent="."]
+[node name="ShadowSprite" type="Sprite2D" parent="."]
 z_index = -1
 position = Vector2(0, 4)
 texture = ExtResource("5_bnwlw")
 
 [node name="SpriteExtraParent" type="Node2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="SpriteExtraParent"]
+[node name="BodySprite" type="Sprite2D" parent="SpriteExtraParent"]
 material = SubResource("ShaderMaterial_ak0dx")
 texture = ExtResource("1_fh86u")
 
-[node name="MovementJiggler" parent="SpriteExtraParent/Sprite2D" instance=ExtResource("6_bvg2f")]
+[node name="MovementJiggler" parent="SpriteExtraParent/BodySprite" instance=ExtResource("6_bvg2f")]
 scale_jiggle = Vector2(0, 0.4)
 decay = 5.0
 
@@ -105,8 +108,17 @@ initial_velocity_min = 40.4
 initial_velocity_max = 161.61
 color = Color(0.67451, 0.196078, 0.196078, 1)
 
+[node name="PickupArea2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea2D"]
+shape = SubResource("RectangleShape2D_lj8a8")
+
 [connection signal="body_entered" from="EnemyMonitorArea2D" to="." method="_on_enemy_monitor_area_2d_body_entered"]
 [connection signal="body_exited" from="EnemyMonitorArea2D" to="." method="_on_enemy_monitor_area_2d_body_exited"]
 [connection signal="timeout" from="CheckNearestBaddieTimer" to="." method="_on_check_nearest_baddie_timer_timeout"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
 [connection signal="timeout" from="MoveJiggleTimer" to="." method="_on_move_jiggle_timer_timeout"]
+[connection signal="area_entered" from="PickupArea2D" to="." method="_on_pickup_area_2d_area_entered"]

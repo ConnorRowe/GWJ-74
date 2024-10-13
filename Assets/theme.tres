@@ -1,9 +1,10 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://k6kepquckgje"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://k6kepquckgje"]
 
 [ext_resource type="Texture2D" uid="uid://bjeuwl25t18e0" path="res://Assets/Textures/ninepatch_2.png" id="1_akhou"]
 [ext_resource type="Texture2D" uid="uid://bae74652jjrvi" path="res://Assets/Textures/ninepatch_focus.png" id="1_rcgjr"]
 [ext_resource type="Texture2D" uid="uid://dwppsdvs8k0w4" path="res://Assets/Textures/ninepatch_1.png" id="2_koduo"]
 [ext_resource type="Texture2D" uid="uid://cr26t7pyk3t01" path="res://Assets/Textures/ninepatch_3.png" id="3_gvsnl"]
+[ext_resource type="FontFile" uid="uid://bpeduc0frp0b2" path="res://Assets/Font/ConsFont_v2.ttf" id="5_uiy5e"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ismuf"]
 texture = ExtResource("1_rcgjr")
@@ -50,6 +51,7 @@ expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
 [resource]
+default_font = ExtResource("5_uiy5e")
 Button/styles/focus = SubResource("StyleBoxTexture_ismuf")
 Button/styles/hover = SubResource("StyleBoxTexture_u0gse")
 Button/styles/normal = SubResource("StyleBoxTexture_cbrxy")

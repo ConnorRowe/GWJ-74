@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://du70fb7ulwujb"]
+
+[ext_resource type="PackedScene" uid="uid://bmkav27727osl" path="res://Scenes/Player.tscn" id="1_6p0pp"]
+[ext_resource type="Script" path="res://Scenes/fake_player.gd" id="2_s082n"]
+
+[node name="FakePlayer" instance=ExtResource("1_6p0pp")]
+script = ExtResource("2_s082n")
+
+[node name="HealthBorder" parent="." index="1"]
+visible = false
+
+[node name="Camera2D" parent="." index="6"]
+enabled = false
+
+[node name="SwapSteerDirTimer" type="Timer" parent="." index="10"]
+wait_time = 4.0
+autostart = true
+
+[connection signal="timeout" from="SwapSteerDirTimer" to="." method="_on_swap_steer_dir_timer_timeout"]

@@ -1,9 +1,31 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdkf1vr7tblyy"]
+[gd_scene load_steps=12 format=3 uid="uid://cdkf1vr7tblyy"]
 
+[ext_resource type="Script" path="res://Scenes/main_menu.gd" id="1_3a7sr"]
 [ext_resource type="Texture2D" uid="uid://d0n4yhohd2tlo" path="res://Assets/Textures/background.png" id="1_qgwye"]
 [ext_resource type="Theme" uid="uid://k6kepquckgje" path="res://Assets/theme.tres" id="2_pruju"]
 [ext_resource type="Script" path="res://Scenes/JiggleControlOnHover.gd" id="3_ygnt3"]
 [ext_resource type="PackedScene" uid="uid://g03jl3msomfx" path="res://Scenes/ControlJiggler.tscn" id="4_1rdx6"]
+[ext_resource type="PackedScene" uid="uid://du70fb7ulwujb" path="res://Scenes/FakePlayer.tscn" id="6_0hnoy"]
+[ext_resource type="Texture2D" uid="uid://d0i1vaprh88ii" path="res://Assets/Textures/ninepatch_4.png" id="6_s00bf"]
+[ext_resource type="FontFile" uid="uid://bxpu632mf8itb" path="res://Assets/Font/Connor4px.ttf" id="8_yfmvy"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_heuy0"]
+texture = ExtResource("6_s00bf")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uvi2m"]
+size = Vector2(357, 20)
+
+[sub_resource type="LabelSettings" id="LabelSettings_57gwo"]
+font = ExtResource("8_yfmvy")
+font_size = 4
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -12,6 +34,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_pruju")
+script = ExtResource("1_3a7sr")
 
 [node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
@@ -22,24 +46,174 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_qgwye")
 
-[node name="Button" type="Button" parent="."]
+[node name="PlayButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -22.5
-offset_top = 29.465
-offset_right = 22.5
-offset_bottom = 37.465
+offset_left = -40.0
+offset_top = 61.0
+offset_right = 40.0
+offset_bottom = 83.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_pruju")
+text = "Play!"
 script = ExtResource("3_ygnt3")
 
-[node name="ControlJiggler" parent="Button" instance=ExtResource("4_1rdx6")]
+[node name="ControlJiggler" parent="PlayButton" instance=ExtResource("4_1rdx6")]
 scale_jiggle = Vector2(0.2, 0.1)
 max_pos_jiggle = Vector2(2, 2)
 max_rotation_jiggle = 1.0
 decay = 0.8
+
+[node name="ColourPrev" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = 33.0
+offset_right = -3.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_heuy0")
+text = "<
+"
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="ColourPrev" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.2, 0.1)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 1.0
+decay = 0.8
+
+[node name="ColourNext" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = 33.0
+offset_right = 40.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_heuy0")
+text = ">
+"
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="ColourNext" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.2, 0.1)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 1.0
+decay = 0.8
+
+[node name="FakePlayer" parent="." instance=ExtResource("6_0hnoy")]
+position = Vector2(160, 90)
+
+[node name="SpawnEnemyTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="EdgeBarrier" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EdgeBarrier"]
+position = Vector2(159.5, -10)
+shape = SubResource("RectangleShape2D_uvi2m")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="EdgeBarrier"]
+position = Vector2(159.5, 190)
+shape = SubResource("RectangleShape2D_uvi2m")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="EdgeBarrier"]
+position = Vector2(-10, 87)
+rotation = -1.57079
+shape = SubResource("RectangleShape2D_uvi2m")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="EdgeBarrier"]
+position = Vector2(330, 87)
+rotation = -1.57079
+shape = SubResource("RectangleShape2D_uvi2m")
+
+[node name="HSlider" type="HSlider" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = -14.0
+offset_right = -15.0
+offset_bottom = 2.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="HSlider2" type="HSlider" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 9.0
+offset_right = -15.0
+offset_bottom = 25.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="HSlider3" type="HSlider" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 31.0
+offset_right = -15.0
+offset_bottom = 47.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 73.0
+offset_right = 290.0
+offset_bottom = 89.0
+text = "Master"
+label_settings = SubResource("LabelSettings_57gwo")
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 97.0
+offset_right = 290.0
+offset_bottom = 113.0
+text = "Music"
+label_settings = SubResource("LabelSettings_57gwo")
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="."]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 119.0
+offset_right = 290.0
+offset_bottom = 135.0
+text = "SFX"
+label_settings = SubResource("LabelSettings_57gwo")
+horizontal_alignment = 1
+
+[connection signal="pressed" from="ColourPrev" to="." method="_on_colour_prev_pressed"]
+[connection signal="pressed" from="ColourNext" to="." method="_on_colour_next_pressed"]
+[connection signal="timeout" from="SpawnEnemyTimer" to="." method="_on_spawn_enemy_timer_timeout"]
