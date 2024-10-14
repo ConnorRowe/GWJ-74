@@ -1,0 +1,14 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://jxfkfd76nbxw"]
+
+[ext_resource type="Texture2D" uid="uid://b0av8j5botces" path="res://Assets/Textures/ninepatch_selected.png" id="1_8y3fp"]
+
+[resource]
+texture = ExtResource("1_8y3fp")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0

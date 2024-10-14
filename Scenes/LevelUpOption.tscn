@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkaqqi4vi60jf"]
+
+[ext_resource type="Theme" uid="uid://k6kepquckgje" path="res://Assets/theme.tres" id="1_o17pr"]
+[ext_resource type="Texture2D" uid="uid://ckt2kl8233f7t" path="res://Assets/Textures/x2.png" id="2_oir4u"]
+[ext_resource type="FontFile" uid="uid://bpeduc0frp0b2" path="res://Assets/Font/ConsFont_v2.ttf" id="3_ee3di"]
+
+[node name="LevelUpOption" type="Button"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_o17pr")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/PanelContainer"]
+layout_mode = 2
+texture = ExtResource("2_oir4u")
+stretch_mode = 5
+
+[node name="DescRichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/bold_font = ExtResource("3_ee3di")
+bbcode_enabled = true
+text = "[Upgrade Name] : + 1 Projectile
+"
+scroll_active = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
