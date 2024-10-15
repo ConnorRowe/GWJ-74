@@ -8,7 +8,7 @@ void fragment() {
 	vec4 base_colour = texture(TEXTURE, UV);
 	if(base_colour.a <= 0.1)
 		discard;
-		
+
 	bool swap = fract(TIME * swap_speed) > 0.5;
 	if(base_colour.r > .5)
 		COLOR = swap ? colour_a : colour_b;

@@ -10,7 +10,7 @@ var health := 100
 var xp := 0
 var lvl := 1
 var xp_req = 10
-const SPEED = 80.0
+const SPEED = 40.0
 var nearby_baddies := []
 var nearest_baddie : Baddie = null
 @onready var health_progress_bar: ProgressBar = $HealthBorder/HealthProgressBar
@@ -18,7 +18,14 @@ var nearest_baddie : Baddie = null
 @onready var damage_jiggler: Node = $SpriteExtraParent/DamageJiggler
 @onready var blood_particles: CPUParticles2D = $BloodParticles
 @onready var body_sprite: Sprite2D = $SpriteExtraParent/BodySprite
+@onready var attack_timer: Timer = $AttackTimer
+@onready var enemy_monitor_shape: CircleShape2D = $EnemyMonitorArea2D/CollisionShape2D.shape
 
+var world: World = null
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_home"):
+		add_xp(xp_req - xp)
 
 func _physics_process(_delta: float) -> void:
 	var dir := Vector2()
@@ -31,7 +38,10 @@ func _physics_process(_delta: float) -> void:
 
 func attack() -> void:
 	var projectile = PROJECTILE.instantiate()
-	projectile.initialise(true, position.direction_to(nearest_baddie.position))
+	if is_instance_valid(world):
+		projectile.initialise(true, position.direction_to(nearest_baddie.position), world.player_stats)
+	else:
+		projectile.initialise(true, position.direction_to(nearest_baddie.position), PlayerStats.new())
 	add_sibling(projectile)
 	projectile.position = position
 

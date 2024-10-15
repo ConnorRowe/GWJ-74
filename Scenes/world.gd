@@ -1,5 +1,7 @@
+class_name World
 extends Node2D
 
+const SELECTED_STYLE_BOX = preload("res://Assets/SelectedStyleBox.tres")
 const BADDIE = preload("res://Scenes/Baddie.tscn")
 const SHOOTING_BADDIE = preload("res://Scenes/ShootingBaddie.tscn")
 @onready var background: TextureRect = $CanvasLayer/Background
@@ -11,6 +13,11 @@ const SHOOTING_BADDIE = preload("res://Scenes/ShootingBaddie.tscn")
 @onready var option_1: Button = $UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option1
 @onready var option_2: Button = $UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option2
 @onready var option_3: Button = $UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option3
+@onready var option_buttons := [option_1, option_2, option_3]
+@onready var ok_button: Button = $"UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/OK Button"
+
+var player_stats = PlayerStats.new()
+
 
 var level_up_options := [
 	{
@@ -76,6 +83,20 @@ var level_up_options := [
 		"desc": "All damage is quadrupled",
 		"weight": 0.1
 	},
+	{
+		"title": "Double Attack Speed",
+		"code": "x2_atk",
+		"icon": preload("res://Assets/Textures/x2.png"),
+		"desc": "Attack speed is doubled",
+		"weight": 0.5
+	},
+	{
+		"title": "Quad Attack Speed",
+		"code": "x4_atk",
+		"icon": preload("res://Assets/Textures/x4.png"),
+		"desc": "Attack speed is quadrupled",
+		"weight": 0.1
+	}
 ]
 
 var level_up_options_backup := []
@@ -91,11 +112,12 @@ func _ready() -> void:
 	
 	level_up_options_backup = level_up_options.duplicate(true)
 	max_rng_weight_backup = max_rng_weight
-
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_home"):
-		open_lvl_up_screen()
+	
+	player.attack_timer.wait_time = player_stats.attack_speed
+	player.world = self
+	
+	player_stats.homing = 1.0
+	
 
 func generate_level_up_option() -> Dictionary:
 	var weight = randf() * max_rng_weight
@@ -154,6 +176,10 @@ func _on_player_lvl_up(current_xp: int, next_xp_req: int, new_lvl: int) -> void:
 	xp_progress_bar.max_value = next_xp_req
 	xp_label.text = str(new_lvl)
 	xp_jiggler.jiggle(1)
+	
+	get_tree().paused = true
+	
+	open_lvl_up_screen()
 
 func set_option_button(button: Button, option: Dictionary) -> void:
 	button.text = option["title"]
@@ -167,19 +193,79 @@ func open_lvl_up_screen() -> void:
 	set_option_button(option_2, current_options[1])
 	set_option_button(option_3, current_options[2])
 
+var selected_lvl_up_option := {}
+var last_selected_option_button : Button = null
 
+func select_lvl_up_option(index: int) -> void:
+	selected_lvl_up_option = current_options[index]
+	if is_instance_valid(last_selected_option_button):
+		last_selected_option_button.remove_theme_stylebox_override("normal")
+		last_selected_option_button.remove_theme_stylebox_override("hover")
+	
+	if index >= 0:
+		last_selected_option_button = option_buttons[index]
+		last_selected_option_button.add_theme_stylebox_override("normal", SELECTED_STYLE_BOX)
+		last_selected_option_button.add_theme_stylebox_override("hover", SELECTED_STYLE_BOX)
+	else:
+		last_selected_option_button = null
+	
+	ok_button.disabled = index < 0
+	
 
 func _on_option_1_pressed() -> void:
-	pass # Replace with function body.
-
+	select_lvl_up_option(0)
+	
 
 func _on_option_2_pressed() -> void:
-	pass # Replace with function body.
+	select_lvl_up_option(1)
 
 
 func _on_option_3_pressed() -> void:
-	pass # Replace with function body.
+	select_lvl_up_option(2)
 
 
 func _on_ok_button_pressed() -> void:
-	pass # Replace with function body.
+	apply_selected_lvl_up()
+
+
+func apply_selected_lvl_up() -> void:
+	var code = selected_lvl_up_option["code"]
+	
+	match code:
+		"extra_proj":
+			player_stats.number_of_projectiles += 1
+		"extra_health":
+			player_stats.health += 10
+			player.health += 10
+			player.health_progress_bar.value += 10
+			player.health_progress_bar.max_value = player_stats.health
+		"homing_proj":
+			player_stats.homing += 1.0
+			level_up_options_backup[2]["desc"] = "Projectiles will home in (even more) on enemies"
+		"extra_pierce":
+			player_stats.pierce += 1
+		"bomb":
+			player_stats.explode = true
+			level_up_options_backup.remove_at(4)
+		"x2_range":
+			player_stats.reach *= 2
+			player.enemy_monitor_shape.radius = player_stats.reach * 4
+		"x4_range":
+			player_stats.reach *= 4
+			player.enemy_monitor_shape.radius = player_stats.reach * 4
+		"x2_dmg":
+			player_stats.damage *= 2
+		"x4_dmg":
+			player_stats.damage *= 4
+		"x2_atk":
+			player_stats.attack_speed *= 0.5
+			player.attack_timer.wait_time = player_stats.attack_speed
+		"x4_atk":
+			player_stats.attack_speed *= 0.25
+			player.attack_timer.wait_time = player_stats.attack_speed
+		_:
+			printerr("ERROR: UNKNOWN LVL UP OPTION CODE")
+	
+	select_lvl_up_option(-1)
+	level_up_screen.visible = false
+	get_tree().paused = false

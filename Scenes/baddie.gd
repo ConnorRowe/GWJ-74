@@ -4,7 +4,7 @@ extends CharacterBody2D
 const GEM = preload("res://Scenes/Gem.tscn")
 
 @export var health := 4
-@export var speed := 50.0
+@export var speed := 25.0
 @export var damage := 1
 @export var xp := 1
 const MOVE_DIST := 120.0

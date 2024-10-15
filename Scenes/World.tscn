@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://3sp3bywvuwsd"]
+[gd_scene load_steps=20 format=3 uid="uid://3sp3bywvuwsd"]
 
 [ext_resource type="Script" path="res://Scenes/world.gd" id="1_4u8o6"]
 [ext_resource type="PackedScene" uid="uid://bmkav27727osl" path="res://Scenes/Player.tscn" id="1_quwha"]
@@ -9,6 +9,7 @@
 [ext_resource type="Theme" uid="uid://k6kepquckgje" path="res://Assets/theme.tres" id="6_yy8ap"]
 [ext_resource type="Texture2D" uid="uid://cw4co3ldvglj" path="res://Assets/Textures/special_light_ray.png" id="7_parvn"]
 [ext_resource type="Texture2D" uid="uid://bhlqwg2qjphxl" path="res://Assets/Textures/extra_proj.png" id="8_1pac6"]
+[ext_resource type="Script" path="res://Scenes/JiggleControlOnHover.gd" id="9_iqkd3"]
 [ext_resource type="Texture2D" uid="uid://bkghjeryeu0d2" path="res://Assets/Textures/homing.png" id="9_lhrv1"]
 [ext_resource type="Texture2D" uid="uid://ckt2kl8233f7t" path="res://Assets/Textures/x2.png" id="10_o1gps"]
 
@@ -42,6 +43,7 @@ _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [node name="World" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_4u8o6")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -56,9 +58,11 @@ texture = ExtResource("3_vnjh6")
 metadata/_edit_use_anchors_ = true
 
 [node name="UICanvasLayer" type="CanvasLayer" parent="."]
+process_mode = 3
 layer = 128
 
 [node name="XPBorder" type="ColorRect" parent="UICanvasLayer"]
+process_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -88,6 +92,7 @@ max_pos_jiggle = Vector2(2, 2)
 max_rotation_jiggle = 1.0
 
 [node name="XPLabel" type="Label" parent="UICanvasLayer"]
+process_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -102,6 +107,7 @@ horizontal_alignment = 2
 justification_flags = 0
 
 [node name="LevelUpScreen" type="Control" parent="UICanvasLayer"]
+process_mode = 3
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -110,6 +116,28 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("6_yy8ap")
+
+[node name="LightRayParticles" type="CPUParticles2D" parent="UICanvasLayer/LevelUpScreen"]
+position = Vector2(160, 90)
+scale = Vector2(10, 10)
+amount = 16
+lifetime = 2.0
+preprocess = 1.0
+randomness = 0.13
+local_coords = true
+texture = ExtResource("7_parvn")
+gravity = Vector2(0, 0)
+angular_velocity_min = -181.82
+angular_velocity_max = 116.37
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.6
+scale_amount_max = 1.2
+scale_amount_curve = SubResource("Curve_0xjft")
+color = Color(1, 0.68, 0.68, 1)
+color_ramp = SubResource("Gradient_ikfhc")
+hue_variation_max = 1.0
+hue_variation_curve = SubResource("Curve_2pou1")
 
 [node name="PanelContainer" type="PanelContainer" parent="UICanvasLayer/LevelUpScreen"]
 layout_mode = 1
@@ -125,8 +153,16 @@ offset_bottom = 84.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="UICanvasLayer/LevelUpScreen/PanelContainer"]
-position = Vector2(57, 13)
+[node name="VBoxContainer" type="VBoxContainer" parent="UICanvasLayer/LevelUpScreen/PanelContainer"]
+layout_mode = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/CenterContainer"]
+layout_mode = 2
+
+[node name="LightRayParticles2" type="CPUParticles2D" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/CenterContainer/Control"]
 amount = 16
 lifetime = 2.0
 preprocess = 1.0
@@ -145,10 +181,9 @@ color_ramp = SubResource("Gradient_ikfhc")
 hue_variation_max = 1.0
 hue_variation_curve = SubResource("Curve_2pou1")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UICanvasLayer/LevelUpScreen/PanelContainer"]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/CenterContainer"]
+clip_contents = false
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -164,28 +199,56 @@ size_flags_vertical = 3
 layout_mode = 2
 text = "+1 Projectile"
 icon = ExtResource("8_1pac6")
+script = ExtResource("9_iqkd3")
+
+[node name="ControlJiggler" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option1" instance=ExtResource("4_t3nb6")]
+scale_jiggle = Vector2(0.2, 0.1)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 1.0
+decay = 0.8
 
 [node name="Option2" type="Button" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions"]
 layout_mode = 2
 text = "Homing Projectiles"
 icon = ExtResource("9_lhrv1")
+script = ExtResource("9_iqkd3")
+
+[node name="ControlJiggler" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option2" instance=ExtResource("4_t3nb6")]
+scale_jiggle = Vector2(0.2, 0.1)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 1.0
+decay = 0.8
 
 [node name="Option3" type="Button" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions"]
 layout_mode = 2
 text = "Double Area"
 icon = ExtResource("10_o1gps")
+script = ExtResource("9_iqkd3")
+
+[node name="ControlJiggler" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option3" instance=ExtResource("4_t3nb6")]
+scale_jiggle = Vector2(0.2, 0.1)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 1.0
+decay = 0.8
 
 [node name="OK Button" type="Button" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions"]
 layout_mode = 2
 size_flags_vertical = 10
 disabled = true
 text = "OK!"
+script = ExtResource("9_iqkd3")
+
+[node name="ControlJiggler" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/OK Button" instance=ExtResource("4_t3nb6")]
+scale_jiggle = Vector2(0.2, 0.1)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 1.0
+decay = 0.8
 
 [node name="Player" parent="." instance=ExtResource("1_quwha")]
 position = Vector2(160, 90)
 
 [node name="SpawnEnemyTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 2.0
 autostart = true
 
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option1" to="." method="_on_option_1_pressed"]

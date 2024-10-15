@@ -17,7 +17,8 @@ bg_color = Color(0.67451, 0.196078, 0.196078, 1)
 bg_color = Color(0.6, 0.898039, 0.313726, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qwaqi"]
-radius = 55.1453
+resource_local_to_scene = true
+radius = 40.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ak0dx"]
 shader = ExtResource("2_k6n4a")

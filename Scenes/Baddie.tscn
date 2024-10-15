@@ -19,6 +19,7 @@ radius = 3.16228
 y_sort_enabled = true
 motion_mode = 1
 script = ExtResource("1_hshta")
+health = 2
 
 [node name="Shadow" type="Sprite2D" parent="."]
 z_index = -1
