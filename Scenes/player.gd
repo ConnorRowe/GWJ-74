@@ -20,7 +20,6 @@ var nearest_baddie : Baddie = null
 @onready var body_sprite: Sprite2D = $SpriteExtraParent/BodySprite
 @onready var attack_timer: Timer = $AttackTimer
 @onready var enemy_monitor_shape: CircleShape2D = $EnemyMonitorArea2D/CollisionShape2D.shape
-
 var world: World = null
 
 func _input(event: InputEvent) -> void:

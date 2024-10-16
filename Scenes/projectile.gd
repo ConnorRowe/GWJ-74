@@ -1,6 +1,8 @@
 class_name Projectile
 extends Node2D
 
+const EXPLOSION = preload("res://Scenes/Explosion.tscn")
+
 var is_players := false
 var direction := Vector2()
 var speed := 45.0
@@ -12,10 +14,8 @@ var homing := 0.0
 @onready var homing_area_2d: Area2D = $HomingArea2D
 @onready var homing_area_shape: CircleShape2D = $HomingArea2D/CollisionShape2D.shape
 var target : Node2D = null
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+var explode := false
+var reach := 0.0
 
 func _process(delta: float) -> void:
 	time_lived += delta
@@ -29,6 +29,8 @@ func initialise(_is_players: bool, _direction: Vector2, _player_stats: PlayerSta
 	damage = _player_stats.damage
 	pierces = _player_stats.pierce
 	homing = _player_stats.homing
+	explode = _player_stats.explode
+	reach = _player_stats.reach
 	
 	$HomingArea2D.monitoring = homing > 0
 	$HomingArea2D/CollisionShape2D.shape.radius = _player_stats.reach * 4
@@ -43,7 +45,14 @@ func _physics_process(delta: float) -> void:
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if is_players:
 		if body is Baddie:
-			body.take_damage(damage)
+			if explode:
+				var explosion = EXPLOSION.instantiate()
+				explosion.explode(damage, reach)
+				explosion.position = position
+				add_sibling(explosion)
+			else:
+				body.take_damage(damage)
+			
 			pierces -= 1
 	elif body is Player:
 		body.take_damage(damage)

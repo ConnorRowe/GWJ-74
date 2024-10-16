@@ -251,6 +251,11 @@ position = Vector2(160, 90)
 wait_time = 2.0
 autostart = true
 
+[node name="CheckScreenTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 2.0
+autostart = true
+
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option1" to="." method="_on_option_1_pressed"]
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option2" to="." method="_on_option_2_pressed"]
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option3" to="." method="_on_option_3_pressed"]
@@ -258,3 +263,4 @@ autostart = true
 [connection signal="lvl_up" from="Player" to="." method="_on_player_lvl_up"]
 [connection signal="xp_changed" from="Player" to="." method="_on_player_xp_changed"]
 [connection signal="timeout" from="SpawnEnemyTimer" to="." method="_on_spawn_enemy_timer_timeout"]
+[connection signal="timeout" from="CheckScreenTimer" to="." method="_on_check_screen_timer_timeout"]

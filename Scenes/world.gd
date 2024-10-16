@@ -4,6 +4,8 @@ extends Node2D
 const SELECTED_STYLE_BOX = preload("res://Assets/SelectedStyleBox.tres")
 const BADDIE = preload("res://Scenes/Baddie.tscn")
 const SHOOTING_BADDIE = preload("res://Scenes/ShootingBaddie.tscn")
+const GEM_GOBLIN = preload("res://Scenes/GemGoblin.tscn")
+
 @onready var background: TextureRect = $CanvasLayer/Background
 @onready var player: Player = $Player
 @onready var xp_progress_bar: ProgressBar = $UICanvasLayer/XPBorder/XPProgressBar
@@ -15,6 +17,7 @@ const SHOOTING_BADDIE = preload("res://Scenes/ShootingBaddie.tscn")
 @onready var option_3: Button = $UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option3
 @onready var option_buttons := [option_1, option_2, option_3]
 @onready var ok_button: Button = $"UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/OK Button"
+var screen_query : PhysicsShapeQueryParameters2D = null
 
 var player_stats = PlayerStats.new()
 
@@ -116,8 +119,14 @@ func _ready() -> void:
 	player.attack_timer.wait_time = player_stats.attack_speed
 	player.world = self
 	
-	player_stats.homing = 1.0
-	
+	var screen_shape := RectangleShape2D.new()
+	screen_shape.size = Vector2(320, 180)
+		
+	screen_query = PhysicsShapeQueryParameters2D.new()
+	screen_query.collide_with_areas = true
+	screen_query.collide_with_bodies = false
+	screen_query.collision_mask = 2
+	screen_query.shape = screen_shape
 
 func generate_level_up_option() -> Dictionary:
 	var weight = randf() * max_rng_weight
@@ -269,3 +278,29 @@ func apply_selected_lvl_up() -> void:
 	select_lvl_up_option(-1)
 	level_up_screen.visible = false
 	get_tree().paused = false
+
+
+var gem_goblin : GemGoblin = null
+@onready var check_screen_timer: Timer = $CheckScreenTimer
+
+
+func _on_check_screen_timer_timeout() -> void:
+	var space_state = get_world_2d().direct_space_state
+	screen_query.transform = Transform2D(0, player.position)
+	var on_screen_gems = space_state.intersect_shape(screen_query, 16)
+	
+	if len(on_screen_gems) >= 1:
+		#spawn the gem goblin!
+		gem_goblin = GEM_GOBLIN.instantiate()
+		var rand_gem = instance_from_id(on_screen_gems[randi_range(0, len(on_screen_gems) - 1)].collider_id).owner
+		gem_goblin.position = rand_gem.position + (Vector2(randf(), randf()).normalized() * randf_range(8, 24))
+		gem_goblin.dying.connect(on_gem_goblin_dying)
+		add_child(gem_goblin)
+		check_screen_timer.stop()
+
+
+func on_gem_goblin_dying() -> void:
+	gem_goblin = null
+	
+	await get_tree().create_timer(20, false).timeout
+	check_screen_timer.start()

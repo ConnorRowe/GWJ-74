@@ -3,6 +3,8 @@ extends CharacterBody2D
 
 const GEM = preload("res://Scenes/Gem.tscn")
 
+signal dying
+
 @export var health := 4
 @export var speed := 25.0
 @export var damage := 1
@@ -14,6 +16,9 @@ var target : CharacterBody2D = null
 var in_contact_range := false
 var contact_damage_counter := 0.0
 @onready var damage_jiggler: Jiggler = $Sprite2D/DamageJiggler
+@onready var offscreen_timer: Timer = $OffscreenTimer
+@onready var sprite_2d: Sprite2D = $Sprite2D
+
 
 func _process(delta: float) -> void:
 	if in_contact_range:
@@ -22,6 +27,9 @@ func _process(delta: float) -> void:
 		if contact_damage_counter <= 0:
 			target.take_damage(damage)
 			contact_damage_counter = CONTACT_DMG_TIME
+	
+	if velocity.length_squared() > 0:
+		sprite_2d.flip_h = velocity.x > 0
 
 func _physics_process(_delta: float) -> void:
 	
@@ -45,9 +53,23 @@ func take_damage(amount: int) -> void:
 
 func die() -> void:
 	# Spawn xp gem
+	dying.emit()
 	var gem = GEM.instantiate()
 	gem.initialise(xp)
 	gem.position = position
 	add_sibling(gem)
 	queue_free()
 	
+
+## Despawn after being off-screen for 5 secs
+
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	offscreen_timer.start()
+
+
+func _on_visible_on_screen_notifier_2d_screen_entered() -> void:
+	offscreen_timer.stop()
+
+
+func _on_offscreen_timer_timeout() -> void:
+	queue_free()
