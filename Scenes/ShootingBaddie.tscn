@@ -1,11 +1,36 @@
-[gd_scene load_steps=3 format=3 uid="uid://ffsnf3ms7u5j"]
+[gd_scene load_steps=10 format=3 uid="uid://ffsnf3ms7u5j"]
 
 [ext_resource type="PackedScene" uid="uid://dveildymlcv35" path="res://Scenes/Baddie.tscn" id="1_1625t"]
 [ext_resource type="Script" path="res://Scenes/shooting_baddie.gd" id="2_xerv8"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Shadow.gdshader" id="3_qw0xj"]
+[ext_resource type="Texture2D" uid="uid://22yih15bgtym" path="res://Assets/Textures/shadow_fade_pattern.png" id="4_v055b"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Coloured_Character.gdshader" id="5_614jy"]
+[ext_resource type="Texture2D" uid="uid://rcynul14x2qa" path="res://Assets/Textures/fade_pattern.png" id="6_vj7t4"]
+[ext_resource type="Texture2D" uid="uid://blm3vn6ijbwnc" path="res://Assets/Textures/baddie_fill.png" id="7_etnj0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gb4hu"]
+resource_local_to_scene = true
+shader = ExtResource("3_qw0xj")
+shader_parameter/fade_amount = 0.0
+shader_parameter/fade_tex = ExtResource("4_v055b")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_844xc"]
+resource_local_to_scene = true
+shader = ExtResource("5_614jy")
+shader_parameter/fade_amount = 0.0
+shader_parameter/fill_colour = Color(0.99, 0.8019, 0.8019, 1)
+shader_parameter/fill_tex = ExtResource("7_etnj0")
+shader_parameter/fade_tex = ExtResource("6_vj7t4")
 
 [node name="ShootingBaddie" instance=ExtResource("1_1625t")]
 script = ExtResource("2_xerv8")
 speed = 0.0
+
+[node name="Shadow" parent="." index="0"]
+material = SubResource("ShaderMaterial_gb4hu")
+
+[node name="Sprite2D" parent="." index="1"]
+material = SubResource("ShaderMaterial_844xc")
 
 [node name="AttackTimer" type="Timer" parent="." index="3"]
 wait_time = 0.5

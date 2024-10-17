@@ -21,6 +21,9 @@ var contact_damage_counter := 0.0
 
 
 func _process(delta: float) -> void:
+	if health <= 0:
+		return
+	
 	if in_contact_range:
 		contact_damage_counter -= delta
 		
@@ -33,8 +36,8 @@ func _process(delta: float) -> void:
 
 func _physics_process(_delta: float) -> void:
 	
-	if is_equal_approx(speed, 0) or not is_instance_valid(target):
-		return	
+	if health <= 0 or is_equal_approx(speed, 0) or not is_instance_valid(target):
+		return
 	
 	if target.position.distance_squared_to(position) > MOVE_DIST:
 		velocity = (target.position - position).normalized() * speed
@@ -52,12 +55,26 @@ func take_damage(amount: int) -> void:
 		call_deferred("die")
 
 func die() -> void:
-	# Spawn xp gem
 	dying.emit()
+	
+	$CollisionShape2D.disabled = true
+	
+	# Animate dying
+	var death_tween = create_tween().set_parallel()
+	death_tween.tween_property($Shadow.material, "shader_parameter/fade_amount", 1.0, .5)
+	death_tween.tween_property(sprite_2d.material, "shader_parameter/fade_amount", 1.0, .5)
+	
+	# Spawn XP gem
 	var gem = GEM.instantiate()
 	gem.initialise(xp)
 	gem.position = position
 	add_sibling(gem)
+	gem.bounce()
+	
+	# Wait til anim is finished then free node
+	await death_tween.finished
+	death_tween.stop()
+	
 	queue_free()
 	
 

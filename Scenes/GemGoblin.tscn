@@ -1,20 +1,41 @@
-[gd_scene load_steps=4 format=3 uid="uid://budi6vs4t4l7c"]
+[gd_scene load_steps=10 format=3 uid="uid://budi6vs4t4l7c"]
 
 [ext_resource type="PackedScene" uid="uid://dveildymlcv35" path="res://Scenes/Baddie.tscn" id="1_ax2s8"]
 [ext_resource type="Script" path="res://Scenes/gem_goblin.gd" id="2_g0uvl"]
 [ext_resource type="Texture2D" uid="uid://bfukmfn1op0uv" path="res://Assets/Textures/gem_goblin.png" id="3_pydkh"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Shadow.gdshader" id="3_qh7bg"]
+[ext_resource type="Texture2D" uid="uid://22yih15bgtym" path="res://Assets/Textures/shadow_fade_pattern.png" id="4_a533t"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Coloured_Character.gdshader" id="5_6r30g"]
+[ext_resource type="Texture2D" uid="uid://rcynul14x2qa" path="res://Assets/Textures/fade_pattern.png" id="6_j2wg7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_33pvv"]
+resource_local_to_scene = true
+shader = ExtResource("3_qh7bg")
+shader_parameter/fade_amount = 0.0
+shader_parameter/fade_tex = ExtResource("4_a533t")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blgqr"]
+resource_local_to_scene = true
+shader = ExtResource("5_6r30g")
+shader_parameter/fade_amount = 0.0
+shader_parameter/fill_colour = Color(1, 1, 1, 0)
+shader_parameter/fade_tex = ExtResource("6_j2wg7")
 
 [node name="GemGoblin" instance=ExtResource("1_ax2s8")]
 script = ExtResource("2_g0uvl")
 health = 10
-speed = 20.0
+speed = 15.0
 xp = 10
 
+[node name="Shadow" parent="." index="0"]
+material = SubResource("ShaderMaterial_33pvv")
+
 [node name="Sprite2D" parent="." index="1"]
-material = null
+material = SubResource("ShaderMaterial_blgqr")
 texture = ExtResource("3_pydkh")
 
 [node name="LookForGemTimer" type="Timer" parent="." index="5"]
+wait_time = 2.0
 autostart = true
 
 [connection signal="timeout" from="LookForGemTimer" to="." method="_on_look_for_gem_timer_timeout"]

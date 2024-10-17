@@ -52,6 +52,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 				add_sibling(explosion)
 			else:
 				body.take_damage(damage)
+				SoundManager.baddie_hit()
 			
 			pierces -= 1
 	elif body is Player:

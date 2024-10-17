@@ -1,0 +1,18 @@
+[gd_scene load_steps=6 format=3 uid="uid://nxcas407m4e3"]
+
+[ext_resource type="Shader" path="res://Assets/Shaders/GoblinPortal.gdshader" id="1_snkrs"]
+[ext_resource type="Script" path="res://Scenes/goblin_portal.gd" id="1_ttjj3"]
+[ext_resource type="Texture2D" uid="uid://fwlphoeamkam" path="res://Assets/Textures/portal.png" id="2_kn0ji"]
+[ext_resource type="Texture2D" uid="uid://sfxk246cqyv3" path="res://Assets/Textures/portal_fade_pattern.png" id="3_eeb05"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jgq3x"]
+shader = ExtResource("1_snkrs")
+shader_parameter/fade_amount = 0.0
+shader_parameter/fade_tex = ExtResource("3_eeb05")
+
+[node name="GoblinPortal" type="Sprite2D"]
+y_sort_enabled = true
+material = SubResource("ShaderMaterial_jgq3x")
+texture = ExtResource("2_kn0ji")
+offset = Vector2(0, -7)
+script = ExtResource("1_ttjj3")

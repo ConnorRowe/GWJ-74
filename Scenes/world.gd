@@ -5,6 +5,7 @@ const SELECTED_STYLE_BOX = preload("res://Assets/SelectedStyleBox.tres")
 const BADDIE = preload("res://Scenes/Baddie.tscn")
 const SHOOTING_BADDIE = preload("res://Scenes/ShootingBaddie.tscn")
 const GEM_GOBLIN = preload("res://Scenes/GemGoblin.tscn")
+const GOBLIN_PORTAL = preload("res://Scenes/GoblinPortal.tscn")
 
 @onready var background: TextureRect = $CanvasLayer/Background
 @onready var player: Player = $Player
@@ -127,6 +128,8 @@ func _ready() -> void:
 	screen_query.collide_with_bodies = false
 	screen_query.collision_mask = 2
 	screen_query.shape = screen_shape
+	
+
 
 func generate_level_up_option() -> Dictionary:
 	var weight = randf() * max_rng_weight
@@ -291,12 +294,22 @@ func _on_check_screen_timer_timeout() -> void:
 	
 	if len(on_screen_gems) >= 1:
 		#spawn the gem goblin!
-		gem_goblin = GEM_GOBLIN.instantiate()
+		check_screen_timer.stop()
+		
 		var rand_gem = instance_from_id(on_screen_gems[randi_range(0, len(on_screen_gems) - 1)].collider_id).owner
-		gem_goblin.position = rand_gem.position + (Vector2(randf(), randf()).normalized() * randf_range(8, 24))
+
+		var portal = GOBLIN_PORTAL.instantiate()
+		add_child(portal)
+		portal.position = rand_gem.position + (Vector2(randf(), randf()).normalized() * randf_range(8, 24))
+		portal.appear()
+		
+		await get_tree().create_timer(2, false).timeout
+
+		gem_goblin = GEM_GOBLIN.instantiate()
+		gem_goblin.portal = portal
+		gem_goblin.position = portal.position
 		gem_goblin.dying.connect(on_gem_goblin_dying)
 		add_child(gem_goblin)
-		check_screen_timer.stop()
 
 
 func on_gem_goblin_dying() -> void:
@@ -304,3 +317,8 @@ func on_gem_goblin_dying() -> void:
 	
 	await get_tree().create_timer(20, false).timeout
 	check_screen_timer.start()
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_released("ui_home"):
+		player_stats.number_of_projectiles += 1

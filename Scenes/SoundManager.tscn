@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://83jhqo2t00wh"]
+[gd_scene load_steps=13 format=3 uid="uid://83jhqo2t00wh"]
 
 [ext_resource type="Script" path="res://Scenes/sound_manager.gd" id="1_34jxe"]
 [ext_resource type="AudioStream" uid="uid://b40b87ednomyw" path="res://Assets/Samples/Pop-01.wav" id="2_67u3x"]
@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://bjmfl3ptvct7m" path="res://Assets/Samples/Pop-03.wav" id="4_71ogk"]
 [ext_resource type="AudioStream" uid="uid://c26f6isl2wlkl" path="res://Assets/Samples/Pop-04.wav" id="5_ky1c7"]
 [ext_resource type="AudioStream" uid="uid://bhapdv6vt86b3" path="res://Assets/Samples/Wobble.wav" id="6_m3tpg"]
+[ext_resource type="AudioStream" uid="uid://dt5x66jjkhsiu" path="res://Assets/Samples/Player_hit.wav" id="6_t2ii6"]
+[ext_resource type="AudioStream" uid="uid://broy83fxvpt5n" path="res://Assets/Samples/Baddie_hit.wav" id="8_o5nyk"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_iypyk"]
 random_pitch = 1.2
@@ -16,11 +18,21 @@ stream_1/stream = ExtResource("3_ukxdr")
 stream_2/stream = ExtResource("4_71ogk")
 stream_3/stream = ExtResource("5_ky1c7")
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_x55tg"]
+random_pitch = 1.2
+streams_count = 1
+stream_0/stream = ExtResource("6_t2ii6")
+
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_vaum4"]
 random_pitch = 1.2
 random_volume_offset_db = 1.0
 streams_count = 1
 stream_0/stream = ExtResource("6_m3tpg")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_q3tqh"]
+random_pitch = 1.2
+streams_count = 1
+stream_0/stream = ExtResource("8_o5nyk")
 
 [node name="SoundManager" type="Node"]
 script = ExtResource("1_34jxe")
@@ -31,10 +43,16 @@ max_polyphony = 2
 bus = &"SFX"
 
 [node name="HurtPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_x55tg")
 bus = &"SFX"
 
 [node name="WobblePlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_vaum4")
 volume_db = -6.933
 max_polyphony = 2
+bus = &"SFX"
+
+[node name="BaddieHitPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_q3tqh")
+max_polyphony = 3
 bus = &"SFX"

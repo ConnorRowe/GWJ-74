@@ -1,16 +1,28 @@
-[gd_scene load_steps=9 format=3 uid="uid://dveildymlcv35"]
+[gd_scene load_steps=13 format=3 uid="uid://dveildymlcv35"]
 
 [ext_resource type="Script" path="res://Scenes/baddie.gd" id="1_hshta"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Shadow.gdshader" id="2_5uifu"]
 [ext_resource type="Texture2D" uid="uid://csjy4y21tnek2" path="res://Assets/Textures/shadow.png" id="2_71id0"]
 [ext_resource type="Shader" path="res://Assets/Shaders/Coloured_Character.gdshader" id="2_546fy"]
 [ext_resource type="Texture2D" uid="uid://dkqocp8an6bae" path="res://Assets/Textures/baddie.png" id="2_j128o"]
+[ext_resource type="Texture2D" uid="uid://22yih15bgtym" path="res://Assets/Textures/shadow_fade_pattern.png" id="3_i40ro"]
 [ext_resource type="Texture2D" uid="uid://blm3vn6ijbwnc" path="res://Assets/Textures/baddie_fill.png" id="3_vdo3r"]
+[ext_resource type="Texture2D" uid="uid://rcynul14x2qa" path="res://Assets/Textures/fade_pattern.png" id="4_iog1k"]
 [ext_resource type="PackedScene" uid="uid://d3rrr2sykov13" path="res://Scenes/Jiggler.tscn" id="6_hhnod"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lpqli"]
+resource_local_to_scene = true
+shader = ExtResource("2_5uifu")
+shader_parameter/fade_amount = 0.0
+shader_parameter/fade_tex = ExtResource("3_i40ro")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oyuf6"]
+resource_local_to_scene = true
 shader = ExtResource("2_546fy")
+shader_parameter/fade_amount = 0.0
 shader_parameter/fill_colour = Color(0.796078, 0.858824, 0.988235, 1)
 shader_parameter/fill_tex = ExtResource("3_vdo3r")
+shader_parameter/fade_tex = ExtResource("4_iog1k")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dlkq6"]
 radius = 3.16228
@@ -23,12 +35,13 @@ health = 2
 
 [node name="Shadow" type="Sprite2D" parent="."]
 z_index = -1
-position = Vector2(0, 4)
+material = SubResource("ShaderMaterial_lpqli")
 texture = ExtResource("2_71id0")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_oyuf6")
 texture = ExtResource("2_j128o")
+offset = Vector2(0, -4)
 
 [node name="DamageJiggler" parent="Sprite2D" instance=ExtResource("6_hhnod")]
 scale_jiggle = Vector2(0.4, 0.4)
@@ -37,7 +50,7 @@ max_rotation_jiggle = -20.0
 decay = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 1)
+position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_dlkq6")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

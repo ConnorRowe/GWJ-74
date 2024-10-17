@@ -21,8 +21,10 @@ var nearest_baddie : Baddie = null
 @onready var attack_timer: Timer = $AttackTimer
 @onready var enemy_monitor_shape: CircleShape2D = $EnemyMonitorArea2D/CollisionShape2D.shape
 var world: World = null
+const attack_offset = Vector2(0, -4)
 
 func _input(event: InputEvent) -> void:
+	return
 	if event.is_action_pressed("ui_home"):
 		add_xp(xp_req - xp)
 
@@ -33,16 +35,34 @@ func _physics_process(_delta: float) -> void:
 	velocity = dir.normalized() * SPEED
 
 	move_and_slide()
-
+	
+func _draw() -> void:
+	return
+	if is_instance_valid(nearest_baddie):
+		draw_line(Vector2.ZERO, Vector2.from_angle(position.angle_to_point(nearest_baddie.position)) * 64, Color.DARK_RED, 3)
+		draw_line(Vector2.ZERO, position.direction_to(nearest_baddie.position) * 64, Color.DARK_BLUE, 2)
+		draw_line(Vector2.ZERO, Vector2.from_angle(position.direction_to(nearest_baddie.position).angle()) * 64, Color.DARK_GREEN)
+	else:
+		draw_circle(Vector2.ZERO, enemy_monitor_shape.radius, Color.BROWN)
 
 func attack() -> void:
-	var projectile = PROJECTILE.instantiate()
-	if is_instance_valid(world):
-		projectile.initialise(true, position.direction_to(nearest_baddie.position), world.player_stats)
-	else:
-		projectile.initialise(true, position.direction_to(nearest_baddie.position), PlayerStats.new())
-	add_sibling(projectile)
-	projectile.position = position
+	var stats = world.player_stats if is_instance_valid(world) else PlayerStats.new()
+	var separation := deg_to_rad(5)
+	var target_angle := position.angle_to_point(nearest_baddie.position)
+	
+	if stats.number_of_projectiles % 2 == 0:
+		target_angle -= separation / 2.0
+		target_angle -= separation * (stats.number_of_projectiles / 2)
+	elif stats.number_of_projectiles > 1:
+		target_angle -= separation * ((stats.number_of_projectiles - 1) / 2)
+	
+	for i in range(stats.number_of_projectiles):
+		var projectile = PROJECTILE.instantiate()		
+		projectile.initialise(true, Vector2.from_angle(target_angle), stats)
+		target_angle += separation
+		
+		add_sibling(projectile)
+		projectile.position = position + attack_offset
 
 
 func take_damage(amount: int) -> void:
@@ -50,6 +70,7 @@ func take_damage(amount: int) -> void:
 	health_progress_bar.value = health
 	damage_jiggler.jiggle(.5)
 	blood_particles.emitting = true
+	SoundManager.hurt()
 
 func set_body_colour(colour: Color) -> void:
 	body_sprite.material.set_shader_parameter("fill_colour", colour)
