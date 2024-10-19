@@ -12,9 +12,10 @@ signal dying
 const MOVE_DIST := 120.0
 const CONTACT_DMG_TIME := .25
 
-var target : CharacterBody2D = null
+@export var target : CharacterBody2D = null
 var in_contact_range := false
 var contact_damage_counter := 0.0
+@export var despawns := true
 @onready var damage_jiggler: Jiggler = $Sprite2D/DamageJiggler
 @onready var offscreen_timer: Timer = $OffscreenTimer
 @onready var sprite_2d: Sprite2D = $Sprite2D
@@ -76,10 +77,9 @@ func die() -> void:
 	death_tween.stop()
 	
 	queue_free()
-	
+
 
 ## Despawn after being off-screen for 5 secs
-
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 	offscreen_timer.start()
 
@@ -89,4 +89,5 @@ func _on_visible_on_screen_notifier_2d_screen_entered() -> void:
 
 
 func _on_offscreen_timer_timeout() -> void:
-	queue_free()
+	if despawns:
+		queue_free()

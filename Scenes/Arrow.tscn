@@ -1,0 +1,16 @@
+[gd_scene load_steps=6 format=3 uid="uid://ckpabdi1lalkm"]
+
+[ext_resource type="Shader" path="res://Assets/Shaders/Arrow.gdshader" id="1_oeu5m"]
+[ext_resource type="Texture2D" uid="uid://dv3hf61vnn8q5" path="res://Assets/Textures/arrow.png" id="2_2pvts"]
+[ext_resource type="Texture2D" uid="uid://caj23cmr6eqvx" path="res://Assets/Textures/arrow_colour_lut.png" id="2_mqym7"]
+[ext_resource type="Script" path="res://Scenes/arrow.gd" id="4_0dpco"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wbmw6"]
+shader = ExtResource("1_oeu5m")
+shader_parameter/target_closeness = 0.0
+shader_parameter/colour_lut = ExtResource("2_mqym7")
+
+[node name="Arrow" type="Sprite2D"]
+material = SubResource("ShaderMaterial_wbmw6")
+texture = ExtResource("2_2pvts")
+script = ExtResource("4_0dpco")

@@ -13,6 +13,8 @@ func explode(damage: int, reach: float) -> void:
 	animated_sprite_2d.scale = Vector2(radius / 14.0, radius / 14.0)
 	animated_sprite_2d.play()
 	
+	SoundManager.explode()
+	
 	await self.ready
 	
 	shape_cast_2d.force_shapecast_update()

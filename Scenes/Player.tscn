@@ -26,8 +26,9 @@ shader_parameter/fade_amount = 0.0
 shader_parameter/fill_colour = Color(0.215686, 0.580392, 0.431373, 1)
 shader_parameter/fill_tex = ExtResource("3_er7dl")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lj8a8"]
-size = Vector2(8, 8)
+[sub_resource type="CircleShape2D" id="CircleShape2D_42sx2"]
+resource_local_to_scene = true
+radius = 5.0
 
 [node name="Player" type="CharacterBody2D"]
 y_sort_enabled = true
@@ -119,7 +120,7 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea2D"]
 position = Vector2(0, -4)
-shape = SubResource("RectangleShape2D_lj8a8")
+shape = SubResource("CircleShape2D_42sx2")
 
 [connection signal="body_entered" from="EnemyMonitorArea2D" to="." method="_on_enemy_monitor_area_2d_body_entered"]
 [connection signal="body_exited" from="EnemyMonitorArea2D" to="." method="_on_enemy_monitor_area_2d_body_exited"]

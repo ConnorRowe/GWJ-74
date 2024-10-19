@@ -1,0 +1,141 @@
+[gd_scene load_steps=14 format=3 uid="uid://s0o5xsxx6lmw"]
+
+[ext_resource type="Texture2D" uid="uid://dobe2vvt0qkjl" path="res://Assets/Textures/pylon_laser_start.png" id="1_avi0r"]
+[ext_resource type="Script" path="res://Scenes/pylon.gd" id="1_u7ic5"]
+[ext_resource type="Texture2D" uid="uid://c7qv406c4ibm2" path="res://Assets/Textures/pylon_repeat.png" id="2_ddkco"]
+[ext_resource type="Texture2D" uid="uid://beyh1wxeqtr8x" path="res://Assets/Textures/pressure_plate.png" id="2_rgn06"]
+[ext_resource type="Texture2D" uid="uid://q075t1apeukk" path="res://Assets/Textures/pylon.png" id="3_nblbg"]
+[ext_resource type="PackedScene" uid="uid://d3rrr2sykov13" path="res://Scenes/Jiggler.tscn" id="5_ftosf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o3ivh"]
+atlas = ExtResource("1_avi0r")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ni0gq"]
+atlas = ExtResource("1_avi0r")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2ul0r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o3ivh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ni0gq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8tcay"]
+atlas = ExtResource("2_ddkco")
+region = Rect2(0, 0, 16, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_02vcl"]
+atlas = ExtResource("2_ddkco")
+region = Rect2(16, 0, 16, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dcmfo"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8tcay")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_02vcl")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kwlup"]
+size = Vector2(8, 3)
+
+[node name="Pylon" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_u7ic5")
+
+[node name="BeamStart" type="AnimatedSprite2D" parent="."]
+visible = false
+z_index = 2
+position = Vector2(0, -17)
+sprite_frames = SubResource("SpriteFrames_2ul0r")
+centered = false
+offset = Vector2(-8, -14)
+
+[node name="BeamRepeat" type="AnimatedSprite2D" parent="."]
+visible = false
+z_index = 2
+position = Vector2(0, -31)
+scale = Vector2(1, 1000)
+sprite_frames = SubResource("SpriteFrames_dcmfo")
+centered = false
+offset = Vector2(-8, -1)
+
+[node name="PylonSprite" type="Sprite2D" parent="."]
+y_sort_enabled = true
+texture = ExtResource("3_nblbg")
+offset = Vector2(0, -6)
+hframes = 2
+
+[node name="Jiggler" parent="PylonSprite" instance=ExtResource("5_ftosf")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_skew_jiggle = 1.0
+max_rotation_jiggle = 2.0
+decay = 4.0
+
+[node name="PressurePlateSprite" type="Sprite2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, 10)
+texture = ExtResource("2_rgn06")
+hframes = 2
+
+[node name="PressurePlateArea2D" type="Area2D" parent="PressurePlateSprite"]
+input_pickable = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PressurePlateSprite/PressurePlateArea2D"]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_kwlup")
+
+[node name="ExplosionLocations" type="Node2D" parent="."]
+
+[node name="Marker2D" type="Marker2D" parent="ExplosionLocations"]
+z_index = 1
+position = Vector2(0, 4)
+gizmo_extents = 4.0
+
+[node name="Marker2D2" type="Marker2D" parent="ExplosionLocations"]
+z_index = 1
+position = Vector2(-3, 1)
+gizmo_extents = 4.0
+
+[node name="Marker2D3" type="Marker2D" parent="ExplosionLocations"]
+z_index = 1
+position = Vector2(4, -2)
+gizmo_extents = 4.0
+
+[node name="Marker2D4" type="Marker2D" parent="ExplosionLocations"]
+z_index = 1
+position = Vector2(-1, -6)
+gizmo_extents = 4.0
+
+[node name="Marker2D5" type="Marker2D" parent="ExplosionLocations"]
+z_index = 1
+position = Vector2(0, -13)
+gizmo_extents = 4.0
+
+[node name="Marker2D6" type="Marker2D" parent="ExplosionLocations"]
+z_index = 1
+position = Vector2(0, -13)
+gizmo_extents = 4.0
+
+[node name="Marker2D7" type="Marker2D" parent="ExplosionLocations"]
+z_index = 1
+position = Vector2(0, -13)
+gizmo_extents = 4.0
+
+[connection signal="body_entered" from="PressurePlateSprite/PressurePlateArea2D" to="." method="_on_pressure_plate_area_2d_body_entered"]

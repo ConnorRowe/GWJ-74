@@ -19,8 +19,36 @@ const GOBLIN_PORTAL = preload("res://Scenes/GoblinPortal.tscn")
 @onready var option_buttons := [option_1, option_2, option_3]
 @onready var ok_button: Button = $"UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/OK Button"
 var screen_query : PhysicsShapeQueryParameters2D = null
+@onready var arrow: Arrow = $UICanvasLayer/Arrow
+@onready var time_label: Label = $UICanvasLayer/TimeLabel
+@onready var difficulty_label: RichTextLabel = $UICanvasLayer/DifficultyLabel
+@onready var spawn_enemy_timer: Timer = $SpawnEnemyTimer
 
 var player_stats = PlayerStats.new()
+var seconds := 0
+var minutes := 0
+
+var difficulty := -1
+
+var difficulty_texts = [
+	"[wave freq=2.0 amp=10]difficulty: chill",
+	"[wave freq=5.0 amp=10][color=#eec39a]difficulty: warming up...",
+	"[shake rate=5 level=1][color=#df7126]difficulty: gettin hectic!",
+	"[shake rate=10 level=1][color=#d95763]difficulty: quite spicy",
+	"[shake rate=20 level=4][color=#ac3232]difficulty: danger!!!"
+]
+
+var difficulty_spawn_rates = [
+	2.0,
+	1.5,
+	1.0,
+	0.5,
+	0.3
+]
+
+var pylon_1_repaired := false
+var pylon_2_repaired := false
+var pylon_3_repaired := false
 
 
 var level_up_options := [
@@ -111,6 +139,8 @@ var max_rng_weight_backup := 0.0
 var current_options := []
 
 func _ready() -> void:
+	SoundManager.theme_music()
+	
 	for option in level_up_options:
 		max_rng_weight += option["weight"]
 	
@@ -129,6 +159,10 @@ func _ready() -> void:
 	screen_query.collision_mask = 2
 	screen_query.shape = screen_shape
 	
+	arrow.player = player
+	arrow.goal_point = $Pylon1/PressurePlateSprite.global_position
+	
+	next_difficulty()
 
 
 func generate_level_up_option() -> Dictionary:
@@ -145,12 +179,13 @@ func generate_level_up_option() -> Dictionary:
 
 
 func generate_option_set(number_of_options: int) -> Array:
+	level_up_options = level_up_options_backup.duplicate()
+
 	var options = []
 	for i in range(number_of_options):
 		options.append(generate_level_up_option())
 	
 	max_rng_weight = max_rng_weight_backup
-	level_up_options = level_up_options_backup.duplicate()
 	
 	return options
 
@@ -168,10 +203,12 @@ func spawn_enemy() -> void:
 		spawn_pos.x = -160 if randf() > 0.5 else 160
 		spawn_pos.y = randf_range(-90, 90)
 		
-	var new_baddie = (BADDIE if randf() > 0.1 else SHOOTING_BADDIE).instantiate()
+	var new_baddie := (BADDIE if randf() > 0.1 else SHOOTING_BADDIE).instantiate()
 	new_baddie.position = spawn_pos + player.position
 	new_baddie.target = player
-	add_child((new_baddie))
+	new_baddie.health *= (1 + difficulty)
+	new_baddie.xp *= 1 + (difficulty / 2)
+	add_child(new_baddie)
 
 
 func _on_spawn_enemy_timer_timeout() -> void:
@@ -200,6 +237,8 @@ func set_option_button(button: Button, option: Dictionary) -> void:
 func open_lvl_up_screen() -> void:
 	level_up_screen.visible = true
 	current_options = generate_option_set(3)
+	
+	SoundManager.level_up()
 	
 	set_option_button(option_1, current_options[0])
 	set_option_button(option_2, current_options[1])
@@ -262,9 +301,11 @@ func apply_selected_lvl_up() -> void:
 		"x2_range":
 			player_stats.reach *= 2
 			player.enemy_monitor_shape.radius = player_stats.reach * 4
+			player.pickup_shape.radius = player_stats.reach / 2
 		"x4_range":
 			player_stats.reach *= 4
 			player.enemy_monitor_shape.radius = player_stats.reach * 4
+			player.pickup_shape.radius = player_stats.reach / 2
 		"x2_dmg":
 			player_stats.damage *= 2
 		"x4_dmg":
@@ -292,7 +333,7 @@ func _on_check_screen_timer_timeout() -> void:
 	screen_query.transform = Transform2D(0, player.position)
 	var on_screen_gems = space_state.intersect_shape(screen_query, 16)
 	
-	if len(on_screen_gems) >= 1:
+	if len(on_screen_gems) >= 8:
 		#spawn the gem goblin!
 		check_screen_timer.stop()
 		
@@ -309,6 +350,7 @@ func _on_check_screen_timer_timeout() -> void:
 		gem_goblin.portal = portal
 		gem_goblin.position = portal.position
 		gem_goblin.dying.connect(on_gem_goblin_dying)
+		gem_goblin.dying.connect(portal.disappear)
 		add_child(gem_goblin)
 
 
@@ -322,3 +364,56 @@ func on_gem_goblin_dying() -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_released("ui_home"):
 		player_stats.number_of_projectiles += 1
+
+
+func _on_runtime_timer_timeout() -> void:
+	seconds += 1
+	if seconds >= 60:
+		seconds = 0
+		minutes += 1
+		next_difficulty()
+	
+	time_label.text = "%02d:%02d" % [minutes, seconds]
+
+func next_difficulty() -> void:
+	if difficulty >= 4:
+		return
+	
+	difficulty += 1
+	difficulty_label.text = difficulty_texts[difficulty]
+	spawn_enemy_timer.wait_time = difficulty_spawn_rates[difficulty]
+	
+
+func next_pylon_arrow() -> void:
+	var next_pylon : Node = null
+	if not pylon_1_repaired:
+		next_pylon = $Pylon1
+	elif not pylon_2_repaired:
+		next_pylon = $Pylon2
+	elif not pylon_3_repaired:
+		next_pylon = $Pylon3
+	else:
+		# Game complete!
+		game_won()
+		return
+	
+	arrow.goal_point = next_pylon.get_node("PressurePlateSprite").global_position
+
+func _on_pylon_1_repaired() -> void:
+	pylon_1_repaired = true
+	next_pylon_arrow()
+
+
+func _on_pylon_3_repaired() -> void:
+	pylon_3_repaired = true
+	next_pylon_arrow()
+
+
+func _on_pylon_2_repaired() -> void:
+	pylon_2_repaired = true
+	next_pylon_arrow()
+
+func game_won() -> void:
+	spawn_enemy_timer.stop()
+	player.invulnerable = true
+	

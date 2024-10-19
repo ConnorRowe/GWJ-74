@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://3sp3bywvuwsd"]
+[gd_scene load_steps=23 format=3 uid="uid://3sp3bywvuwsd"]
 
 [ext_resource type="Script" path="res://Scenes/world.gd" id="1_4u8o6"]
 [ext_resource type="PackedScene" uid="uid://bmkav27727osl" path="res://Scenes/Player.tscn" id="1_quwha"]
@@ -12,6 +12,9 @@
 [ext_resource type="Script" path="res://Scenes/JiggleControlOnHover.gd" id="9_iqkd3"]
 [ext_resource type="Texture2D" uid="uid://bkghjeryeu0d2" path="res://Assets/Textures/homing.png" id="9_lhrv1"]
 [ext_resource type="Texture2D" uid="uid://ckt2kl8233f7t" path="res://Assets/Textures/x2.png" id="10_o1gps"]
+[ext_resource type="PackedScene" uid="uid://ckpabdi1lalkm" path="res://Scenes/Arrow.tscn" id="12_cgtqe"]
+[ext_resource type="PackedScene" uid="uid://s0o5xsxx6lmw" path="res://Scenes/Pylon.tscn" id="13_us1uq"]
+[ext_resource type="PackedScene" uid="uid://ffsnf3ms7u5j" path="res://Scenes/ShootingBaddie.tscn" id="15_v8vok"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_if0dd"]
 shader = ExtResource("2_mhla2")
@@ -105,6 +108,9 @@ text = "1"
 label_settings = SubResource("LabelSettings_i8qwe")
 horizontal_alignment = 2
 justification_flags = 0
+
+[node name="Arrow" parent="UICanvasLayer" instance=ExtResource("12_cgtqe")]
+position = Vector2(160, 12)
 
 [node name="LevelUpScreen" type="Control" parent="UICanvasLayer"]
 process_mode = 3
@@ -244,8 +250,38 @@ max_pos_jiggle = Vector2(2, 2)
 max_rotation_jiggle = 1.0
 decay = 0.8
 
+[node name="TimeLabel" type="Label" parent="UICanvasLayer"]
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 42.0
+offset_bottom = 24.0
+text = "00:00"
+label_settings = SubResource("LabelSettings_i8qwe")
+
+[node name="DifficultyLabel" type="RichTextLabel" parent="UICanvasLayer"]
+clip_contents = false
+offset_left = 27.0
+offset_top = 1.0
+offset_right = 153.0
+offset_bottom = 24.0
+theme_override_fonts/normal_font = ExtResource("4_wenbd")
+theme_override_font_sizes/normal_font_size = 4
+bbcode_enabled = true
+text = "[wave freq=2.0 amp=10]difficulty: chill"
+scroll_active = false
+
+[node name="ColorRect" type="ColorRect" parent="UICanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
 [node name="Player" parent="." instance=ExtResource("1_quwha")]
-position = Vector2(160, 90)
 
 [node name="SpawnEnemyTimer" type="Timer" parent="."]
 wait_time = 2.0
@@ -256,6 +292,110 @@ process_callback = 0
 wait_time = 2.0
 autostart = true
 
+[node name="Pylon1" parent="." instance=ExtResource("13_us1uq")]
+position = Vector2(-343, 239)
+
+[node name="Pylon2" parent="." instance=ExtResource("13_us1uq")]
+position = Vector2(343, 239)
+
+[node name="Pylon3" parent="." instance=ExtResource("13_us1uq")]
+position = Vector2(0, -227)
+
+[node name="RuntimeTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="ShootingBaddie" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(343, 222)
+health = 10
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie2" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(318, 243)
+health = 10
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie3" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(369, 243)
+health = 10
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie4" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(344, 268)
+health = 10
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie5" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(0, -246)
+health = 15
+damage = 2
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie6" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(-25, -225)
+health = 15
+damage = 2
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie7" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(26, -225)
+health = 15
+damage = 2
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie8" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(1, -200)
+health = 15
+damage = 2
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie9" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(-15, -236)
+health = 15
+damage = 2
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie10" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(-15, -210)
+health = 15
+damage = 2
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie11" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(15, -237)
+health = 15
+damage = 2
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
+[node name="ShootingBaddie12" parent="." node_paths=PackedStringArray("target") instance=ExtResource("15_v8vok")]
+position = Vector2(22, -209)
+health = 15
+damage = 2
+xp = 20
+target = NodePath("../Player")
+despawns = false
+
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option1" to="." method="_on_option_1_pressed"]
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option2" to="." method="_on_option_2_pressed"]
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option3" to="." method="_on_option_3_pressed"]
@@ -264,3 +404,7 @@ autostart = true
 [connection signal="xp_changed" from="Player" to="." method="_on_player_xp_changed"]
 [connection signal="timeout" from="SpawnEnemyTimer" to="." method="_on_spawn_enemy_timer_timeout"]
 [connection signal="timeout" from="CheckScreenTimer" to="." method="_on_check_screen_timer_timeout"]
+[connection signal="repaired" from="Pylon1" to="." method="_on_pylon_1_repaired"]
+[connection signal="repaired" from="Pylon2" to="." method="_on_pylon_2_repaired"]
+[connection signal="repaired" from="Pylon3" to="." method="_on_pylon_3_repaired"]
+[connection signal="timeout" from="RuntimeTimer" to="." method="_on_runtime_timer_timeout"]

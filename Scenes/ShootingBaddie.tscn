@@ -33,7 +33,7 @@ material = SubResource("ShaderMaterial_gb4hu")
 material = SubResource("ShaderMaterial_844xc")
 
 [node name="AttackTimer" type="Timer" parent="." index="3"]
-wait_time = 0.5
+wait_time = 0.75
 autostart = true
 
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

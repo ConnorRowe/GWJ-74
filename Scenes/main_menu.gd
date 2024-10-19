@@ -9,6 +9,9 @@ var player_colour_idx := 8
 const BADDIE = preload("res://Scenes/Baddie.tscn")
 @onready var fake_player: CharacterBody2D = $FakePlayer
 
+func _ready() -> void:
+	SoundManager.menu_music()
+
 func _on_spawn_enemy_timer_timeout() -> void:
 	var spawn_pos = Vector2()
 	if randf() > 0.5:
@@ -21,14 +24,21 @@ func _on_spawn_enemy_timer_timeout() -> void:
 	var new_baddie = BADDIE.instantiate()
 	new_baddie.position = spawn_pos
 	new_baddie.target = fake_player
+	new_baddie.damage = 0
 	add_child((new_baddie))
 
 
 func _on_colour_prev_pressed() -> void:
 	player_colour_idx = wrapi(player_colour_idx - 1, 0, len(PLAYER_COLOURS) - 1)
 	fake_player.set_player_colour(PLAYER_COLOURS[player_colour_idx])
+	GameInstance.player_colour = PLAYER_COLOURS[player_colour_idx]
 
 
 func _on_colour_next_pressed() -> void:
 	player_colour_idx = wrapi(player_colour_idx + 1, 0, len(PLAYER_COLOURS) - 1)
 	fake_player.set_player_colour(PLAYER_COLOURS[player_colour_idx])
+	GameInstance.player_colour = PLAYER_COLOURS[player_colour_idx]
+
+
+func _on_play_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://Scenes/World.tscn")

@@ -77,6 +77,8 @@ func _on_look_for_gem_timer_timeout() -> void:
 func vanish() -> void:
 	set_physics_process(false)
 	
+	SoundManager.goblin()
+	
 	await get_tree().create_timer(.5, false).timeout
 	var tween = create_tween().tween_property(sprite_2d.material, "shader_parameter/fade_amount", 1.0, .5)
 	await tween.finished

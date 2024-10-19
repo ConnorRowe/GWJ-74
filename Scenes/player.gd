@@ -22,6 +22,11 @@ var nearest_baddie : Baddie = null
 @onready var enemy_monitor_shape: CircleShape2D = $EnemyMonitorArea2D/CollisionShape2D.shape
 var world: World = null
 const attack_offset = Vector2(0, -4)
+var invulnerable := false
+@onready var pickup_shape: CircleShape2D = $PickupArea2D/CollisionShape2D.shape
+
+func _ready() -> void:
+	set_player_colour(GameInstance.player_colour)
 
 func _input(event: InputEvent) -> void:
 	return
@@ -29,13 +34,17 @@ func _input(event: InputEvent) -> void:
 		add_xp(xp_req - xp)
 
 func _physics_process(_delta: float) -> void:
+	if invulnerable:
+		return
+	
 	var dir := Vector2()
 	dir.x = Input.get_axis("move_left", "move_right")
 	dir.y = Input.get_axis("move_up", "move_down")
 	velocity = dir.normalized() * SPEED
 
 	move_and_slide()
-	
+
+
 func _draw() -> void:
 	return
 	if is_instance_valid(nearest_baddie):
@@ -44,6 +53,7 @@ func _draw() -> void:
 		draw_line(Vector2.ZERO, Vector2.from_angle(position.direction_to(nearest_baddie.position).angle()) * 64, Color.DARK_GREEN)
 	else:
 		draw_circle(Vector2.ZERO, enemy_monitor_shape.radius, Color.BROWN)
+
 
 func attack() -> void:
 	var stats = world.player_stats if is_instance_valid(world) else PlayerStats.new()
@@ -66,14 +76,19 @@ func attack() -> void:
 
 
 func take_damage(amount: int) -> void:
+	if invulnerable:
+		return
+	
 	health = clampi(health - amount, 0, 100)
 	health_progress_bar.value = health
 	damage_jiggler.jiggle(.5)
 	blood_particles.emitting = true
 	SoundManager.hurt()
 
+
 func set_body_colour(colour: Color) -> void:
 	body_sprite.material.set_shader_parameter("fill_colour", colour)
+
 
 func _on_enemy_monitor_area_2d_body_entered(body: Node2D) -> void:
 	if body is Baddie:

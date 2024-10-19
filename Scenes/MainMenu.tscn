@@ -38,6 +38,7 @@ theme = ExtResource("2_pruju")
 script = ExtResource("1_3a7sr")
 
 [node name="Background" type="TextureRect" parent="."]
+z_index = -1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -214,6 +215,7 @@ text = "SFX"
 label_settings = SubResource("LabelSettings_57gwo")
 horizontal_alignment = 1
 
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="ColourPrev" to="." method="_on_colour_prev_pressed"]
 [connection signal="pressed" from="ColourNext" to="." method="_on_colour_next_pressed"]
 [connection signal="timeout" from="SpawnEnemyTimer" to="." method="_on_spawn_enemy_timer_timeout"]
