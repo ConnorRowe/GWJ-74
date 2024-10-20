@@ -7,10 +7,31 @@ Color("#d95763"), Color("#d77bba")]
 var player_colour_idx := 8
 
 const BADDIE = preload("res://Scenes/Baddie.tscn")
+
 @onready var fake_player: CharacterBody2D = $FakePlayer
+@onready var master_h_slider: HSlider = $MasterHSlider
+@onready var music_h_slider: HSlider = $MusicHSlider
+@onready var sfx_h_slider: HSlider = $SFXHSlider
+var master_bus : int
+var music_bus : int
+var sfx_bus : int
 
 func _ready() -> void:
 	SoundManager.menu_music()
+	
+	master_bus = AudioServer.get_bus_index("Master")
+	music_bus = AudioServer.get_bus_index("Music")
+	sfx_bus = AudioServer.get_bus_index("SFX")
+	
+	master_h_slider.value = db_to_linear(AudioServer.get_bus_volume_db(master_bus))
+	music_h_slider.value = db_to_linear(AudioServer.get_bus_volume_db(music_bus))
+	sfx_h_slider.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_bus))
+	
+	if not GameInstance.played_intro:
+		GameInstance.played_intro = true
+		get_tree().paused = true
+		$Intro.visible = true
+		$Intro/AnimationPlayer.play("intro")
 
 func _on_spawn_enemy_timer_timeout() -> void:
 	var spawn_pos = Vector2()
@@ -42,3 +63,27 @@ func _on_colour_next_pressed() -> void:
 
 func _on_play_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://Scenes/World.tscn")
+
+
+func _on_master_h_slider_value_changed(value: float) -> void:
+	vol_value_changed(value, master_bus)
+
+
+func _on_music_h_slider_value_changed(value: float) -> void:
+	vol_value_changed(value, music_bus)
+
+
+func _on_sfxh_slider_value_changed(value: float) -> void:
+	vol_value_changed(value, sfx_bus)
+
+
+func vol_value_changed(vol: float, bus_index: int):
+	AudioServer.set_bus_volume_db(bus_index, linear_to_db(vol))
+	SoundManager.pop()
+
+func intro_unpause() -> void:
+	get_tree().paused = false
+
+
+func _on_animation_player_animation_finished(_anim_name: StringName) -> void:
+	$Intro.visible = false

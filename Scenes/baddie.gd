@@ -50,6 +50,9 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 func take_damage(amount: int) -> void:
+	if health <= 0:
+		return
+	
 	health = clampi(health - amount, 0, 100)
 	damage_jiggler.jiggle(1)
 	if health <= 0:

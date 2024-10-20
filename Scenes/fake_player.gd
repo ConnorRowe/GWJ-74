@@ -5,9 +5,9 @@ const centre_pos = Vector2(160, 90)
 
 func _physics_process(_delta: float) -> void:
 	if is_instance_valid(nearest_baddie):
-		velocity = nearest_baddie.position.direction_to(position).rotated(deg_to_rad(30 if steer_dir else -30)) * SPEED
+		velocity = nearest_baddie.position.direction_to(position).rotated(deg_to_rad(30 if steer_dir else -30)) * speed
 	elif (position - centre_pos).length_squared() > 2:
-		velocity = position.direction_to(centre_pos) * SPEED
+		velocity = position.direction_to(centre_pos) * speed
 	else:
 		velocity = Vector2.ZERO
 

@@ -57,7 +57,7 @@ var level_up_options := [
 		"code": "extra_proj",
 		"icon": preload("res://Assets/Textures/extra_proj.png"),
 		"desc": "Shoot an extra projectile with each attack",
-		"weight": 0.2
+		"weight": 0.5
 	},
 	{
 		"title": "+10 Health",
@@ -71,21 +71,21 @@ var level_up_options := [
 		"code": "homing_proj",
 		"icon": preload("res://Assets/Textures/homing.png"),
 		"desc": "Projectiles will home in on enemies",
-		"weight": 0.1
+		"weight": 1
 	},
 	{
 		"title": "+1 Pierce",
 		"code": "extra_pierce",
 		"icon": preload("res://Assets/Textures/pierce.png"),
 		"desc": "Projectiles will pierce through enemies an extra time",
-		"weight": 0.4
+		"weight": 2
 	},
 	{
 		"title": "Bomb",
 		"code": "bomb",
 		"icon": preload("res://Assets/Textures/bomb.png"),
 		"desc": "Projectiles explode in an area on hit",
-		"weight": 0.1
+		"weight": 0.5
 	},
 	{
 		"title": "Double Range",
@@ -99,7 +99,7 @@ var level_up_options := [
 		"code": "x4_range",
 		"icon": preload("res://Assets/Textures/x4.png"),
 		"desc": "Everything has x4 range",
-		"weight": 0.1
+		"weight": 0.01
 	},
 	{
 		"title": "Double Damage",
@@ -113,7 +113,7 @@ var level_up_options := [
 		"code": "x4_dmg",
 		"icon": preload("res://Assets/Textures/x4.png"),
 		"desc": "All damage is quadrupled",
-		"weight": 0.1
+		"weight": 0.01
 	},
 	{
 		"title": "Double Attack Speed",
@@ -127,7 +127,14 @@ var level_up_options := [
 		"code": "x4_atk",
 		"icon": preload("res://Assets/Textures/x4.png"),
 		"desc": "Attack speed is quadrupled",
-		"weight": 0.1
+		"weight": 0.01
+	},
+	{
+		"title": "Bonus Speed",
+		"code": "speed",
+		"icon": preload("res://Assets/Textures/speed_up.png"),
+		"desc": "Movement speed increased by 20 percent",
+		"weight": 2
 	}
 ]
 
@@ -237,6 +244,7 @@ func set_option_button(button: Button, option: Dictionary) -> void:
 func open_lvl_up_screen() -> void:
 	level_up_screen.visible = true
 	current_options = generate_option_set(3)
+	option_desc_label.text = ""
 	
 	SoundManager.level_up()
 	
@@ -287,8 +295,8 @@ func apply_selected_lvl_up() -> void:
 			player_stats.number_of_projectiles += 1
 		"extra_health":
 			player_stats.health += 10
-			player.health += 10
-			player.health_progress_bar.value += 10
+			player.health += player_stats.health
+			player.health_progress_bar.value = player.health
 			player.health_progress_bar.max_value = player_stats.health
 		"homing_proj":
 			player_stats.homing += 1.0
@@ -316,6 +324,8 @@ func apply_selected_lvl_up() -> void:
 		"x4_atk":
 			player_stats.attack_speed *= 0.25
 			player.attack_timer.wait_time = player_stats.attack_speed
+		"speed":
+			player.speed *= 1.2
 		_:
 			printerr("ERROR: UNKNOWN LVL UP OPTION CODE")
 	
@@ -333,7 +343,7 @@ func _on_check_screen_timer_timeout() -> void:
 	screen_query.transform = Transform2D(0, player.position)
 	var on_screen_gems = space_state.intersect_shape(screen_query, 16)
 	
-	if len(on_screen_gems) >= 8:
+	if len(on_screen_gems) >= 4:
 		#spawn the gem goblin!
 		check_screen_timer.stop()
 		
@@ -413,7 +423,72 @@ func _on_pylon_2_repaired() -> void:
 	pylon_2_repaired = true
 	next_pylon_arrow()
 
+
 func game_won() -> void:
 	spawn_enemy_timer.stop()
 	player.invulnerable = true
 	
+	var win_tween = create_tween().set_parallel()
+	win_tween.tween_property($UICanvasLayer/TransitionColorRect, "color", Color.WHITE, 2.0).from(Color.TRANSPARENT).set_ease(Tween.EASE_IN_OUT)
+	win_tween.tween_method(fade_music, 1.0, 0.0, 2.0)
+	
+	await win_tween.finished
+	
+	SoundManager.music_player.stop()
+	SoundManager.music_player.volume_db = linear_to_db(1.0)
+	
+	get_tree().change_scene_to_file("res://Scenes/GameWonScreen.tscn")
+
+
+func fade_music(linear_vol: float) -> void:
+	SoundManager.music_player.volume_db = linear_to_db(linear_vol)
+
+var fail_tween : Tween = null
+
+func game_over() -> void:
+	var game_over_screen: Control = $UICanvasLayer/GameOverScreen
+	game_over_screen.visible = true
+
+	fail_tween = create_tween().set_parallel()
+	fail_tween.tween_method(tween_set_time_scale, 1.0, 0.001, 1.0)
+	fail_tween.tween_property($Modulate, "color", Color.RED, 1.0)
+	fail_tween.tween_property($CanvasLayer/Modulate, "color", Color.RED, 1.0)
+	fail_tween.tween_property(game_over_screen, "modulate", Color.WHITE, 1.0).from(Color.TRANSPARENT)
+	fail_tween.tween_method(fade_music, 1.0, 0.0, 1.0)
+
+	await fail_tween.finished
+	
+	Engine.time_scale = 1.0
+	SoundManager.music_player.stop()
+	SoundManager.music_player.volume_db = linear_to_db(1.0)
+	SoundManager.game_over()
+
+	get_tree().paused = true
+
+func tween_set_time_scale(time_scale : float) -> void:
+	Engine.time_scale = time_scale
+	fail_tween.set_speed_scale(1.0 / time_scale)
+
+func _on_player_dying() -> void:
+	game_over()
+
+func _on_restart_button_pressed() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://Scenes/MainMenu.tscn")
+
+@onready var option_desc_label: Label = $UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/OptionDescLabel
+
+func _on_option_1_mouse_entered() -> void:
+	option_desc_label.text = current_options[0].desc
+
+
+func _on_option_2_mouse_entered() -> void:
+	option_desc_label.text = current_options[1].desc
+
+
+func _on_option_3_mouse_entered() -> void:
+	option_desc_label.text = current_options[2].desc
+
+
+func _on_option_mouse_exited() -> void:
+	option_desc_label.text = selected_lvl_up_option["desc"] if selected_lvl_up_option.has("desc") else ""

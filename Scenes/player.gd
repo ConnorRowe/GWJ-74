@@ -3,14 +3,15 @@ extends CharacterBody2D
 
 signal xp_changed(new_xp)
 signal lvl_up(current_xp, next_xp_req, new_lvl)
+signal dying()
 
 const PROJECTILE = preload("res://Scenes/Projectile.tscn")
 
-var health := 100
+var health := 30
 var xp := 0
 var lvl := 1
-var xp_req = 10
-const SPEED = 40.0
+var xp_req = 6
+var speed = 40.0
 var nearby_baddies := []
 var nearest_baddie : Baddie = null
 @onready var health_progress_bar: ProgressBar = $HealthBorder/HealthProgressBar
@@ -40,7 +41,7 @@ func _physics_process(_delta: float) -> void:
 	var dir := Vector2()
 	dir.x = Input.get_axis("move_left", "move_right")
 	dir.y = Input.get_axis("move_up", "move_down")
-	velocity = dir.normalized() * SPEED
+	velocity = dir.normalized() * speed
 
 	move_and_slide()
 
@@ -76,7 +77,7 @@ func attack() -> void:
 
 
 func take_damage(amount: int) -> void:
-	if invulnerable:
+	if invulnerable or health <= 0:
 		return
 	
 	health = clampi(health - amount, 0, 100)
@@ -84,6 +85,9 @@ func take_damage(amount: int) -> void:
 	damage_jiggler.jiggle(.5)
 	blood_particles.emitting = true
 	SoundManager.hurt()
+	
+	if health == 0:
+		dying.emit()
 
 
 func set_body_colour(colour: Color) -> void:

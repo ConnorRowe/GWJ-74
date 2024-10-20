@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cdkf1vr7tblyy"]
+[gd_scene load_steps=23 format=3 uid="uid://cdkf1vr7tblyy"]
 
 [ext_resource type="Script" path="res://Scenes/main_menu.gd" id="1_3a7sr"]
 [ext_resource type="Texture2D" uid="uid://d0n4yhohd2tlo" path="res://Assets/Textures/background.png" id="1_qgwye"]
@@ -8,6 +8,13 @@
 [ext_resource type="PackedScene" uid="uid://du70fb7ulwujb" path="res://Scenes/FakePlayer.tscn" id="6_0hnoy"]
 [ext_resource type="Texture2D" uid="uid://d0i1vaprh88ii" path="res://Assets/Textures/ninepatch_4.png" id="6_s00bf"]
 [ext_resource type="FontFile" uid="uid://bxpu632mf8itb" path="res://Assets/Font/Connor4px.ttf" id="8_yfmvy"]
+[ext_resource type="Texture2D" uid="uid://pun31jrw4w0g" path="res://Assets/Textures/wasd.png" id="9_xqdp8"]
+[ext_resource type="Texture2D" uid="uid://d340nv54ev5bn" path="res://Assets/Textures/logo.png" id="10_pra85"]
+[ext_resource type="Texture2D" uid="uid://d1nhpqjvxorwe" path="res://Assets/Textures/gwj-theme.png" id="11_l0k5i"]
+[ext_resource type="PackedScene" uid="uid://d3rrr2sykov13" path="res://Scenes/Jiggler.tscn" id="12_llym4"]
+[ext_resource type="Texture2D" uid="uid://beh62145tcupf" path="res://Assets/Textures/gwj-wildcard-1.png" id="12_st5vw"]
+[ext_resource type="Texture2D" uid="uid://xjdtyv1fn8x" path="res://Assets/Textures/gwj-wildcard-2.png" id="13_7dehd"]
+[ext_resource type="Texture2D" uid="uid://bnvicnvbahxwa" path="res://Assets/Textures/GWJ-Half-Logo-Orange.svg" id="15_cx3yc"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_heuy0"]
 texture = ExtResource("6_s00bf")
@@ -26,6 +33,215 @@ size = Vector2(357, 20)
 [sub_resource type="LabelSettings" id="LabelSettings_57gwo"]
 font = ExtResource("8_yfmvy")
 font_size = 4
+font_color = Color(0.933333, 0.764706, 0.603922, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_s28se"]
+font = ExtResource("8_yfmvy")
+font_size = 4
+font_color = Color(0.93, 0.93, 0.93, 1)
+
+[sub_resource type="Animation" id="Animation_01me6"]
+resource_name = "intro"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Label:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.625, 1.875, 2.16667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Label/ControlJiggler")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.625),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [1.0],
+"method": &"jiggle"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("theme parent/Gwj-theme:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(2.1875, 2.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("wc1 parent/Wc1Jiggler")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(2.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [1.0],
+"method": &"jiggle"
+}]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("wc2 parent/Wc2Jiggler")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(2.79167),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [1.0],
+"method": &"jiggle"
+}]
+}
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("theme parent/ThemeJiggler")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(3.125),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [1.0],
+"method": &"jiggle"
+}]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(4.375, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("..")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(4.36667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"intro_unpause"
+}]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("wc1 parent:position")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(2.5, 2.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(125.5, 269.1), Vector2(125.5, 110)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("wc2 parent:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(2.8, 3.13333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(194.5, 269.1), Vector2(194.5, 110)]
+}
+
+[sub_resource type="Animation" id="Animation_dxs2v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Label:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("theme parent/Gwj-theme:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("wc1 parent:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(125.5, 269.1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("wc2 parent:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(194.5, 269.1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l3lku"]
+_data = {
+"RESET": SubResource("Animation_dxs2v"),
+"intro": SubResource("Animation_01me6")
+}
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -57,7 +273,7 @@ anchor_bottom = 0.5
 offset_left = -40.0
 offset_top = 61.0
 offset_right = 40.0
-offset_bottom = 83.0
+offset_bottom = 86.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Play!"
@@ -77,7 +293,7 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -40.0
-offset_top = 33.0
+offset_top = 31.0
 offset_right = -3.0
 offset_bottom = 55.0
 grow_horizontal = 2
@@ -101,7 +317,7 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 3.0
-offset_top = 33.0
+offset_top = 31.0
 offset_right = 40.0
 offset_bottom = 55.0
 grow_horizontal = 2
@@ -143,7 +359,7 @@ position = Vector2(330, 87)
 rotation = -1.57079
 shape = SubResource("RectangleShape2D_uvi2m")
 
-[node name="HSlider" type="HSlider" parent="."]
+[node name="MasterHSlider" type="HSlider" parent="."]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -156,8 +372,11 @@ offset_right = -15.0
 offset_bottom = 2.0
 grow_horizontal = 0
 grow_vertical = 2
+theme = ExtResource("2_pruju")
+max_value = 1.0
+step = 0.01
 
-[node name="HSlider2" type="HSlider" parent="."]
+[node name="MusicHSlider" type="HSlider" parent="."]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -170,8 +389,11 @@ offset_right = -15.0
 offset_bottom = 25.0
 grow_horizontal = 0
 grow_vertical = 2
+theme = ExtResource("2_pruju")
+max_value = 1.0
+step = 0.01
 
-[node name="HSlider3" type="HSlider" parent="."]
+[node name="SFXHSlider" type="HSlider" parent="."]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -184,6 +406,9 @@ offset_right = -15.0
 offset_bottom = 47.0
 grow_horizontal = 0
 grow_vertical = 2
+theme = ExtResource("2_pruju")
+max_value = 1.0
+step = 0.01
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
@@ -191,9 +416,141 @@ offset_left = 250.0
 offset_top = 73.0
 offset_right = 290.0
 offset_bottom = 89.0
+mouse_filter = 1
 text = "Master"
 label_settings = SubResource("LabelSettings_57gwo")
 horizontal_alignment = 1
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="Label4" type="Label" parent="."]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 55.5
+offset_right = 94.0
+offset_bottom = 71.5
+pivot_offset = Vector2(38, 7)
+mouse_filter = 1
+text = "or your regional
+equivalent"
+label_settings = SubResource("LabelSettings_57gwo")
+horizontal_alignment = 1
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label4" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="Label7" type="Label" parent="."]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 14.0
+offset_right = 94.0
+offset_bottom = 30.0
+pivot_offset = Vector2(38, 7)
+mouse_filter = 1
+text = "CONTROLS:"
+label_settings = SubResource("LabelSettings_s28se")
+horizontal_alignment = 1
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label7" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="Label8" type="Label" parent="."]
+layout_mode = 0
+offset_left = 232.0
+offset_top = 60.0
+offset_right = 309.0
+offset_bottom = 76.0
+pivot_offset = Vector2(38, 7)
+mouse_filter = 1
+text = "SOUND SETTINGS:"
+label_settings = SubResource("LabelSettings_s28se")
+horizontal_alignment = 1
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label8" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="Label9" type="Label" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 107.0
+offset_right = 93.0
+offset_bottom = 123.0
+pivot_offset = Vector2(38, 7)
+mouse_filter = 1
+text = "INSTRUCTIONS:"
+label_settings = SubResource("LabelSettings_s28se")
+horizontal_alignment = 1
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label9" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="Label6" type="Label" parent="."]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 112.0
+offset_right = 205.0
+offset_bottom = 119.0
+pivot_offset = Vector2(44, 3)
+mouse_filter = 1
+text = "change ur colour!"
+label_settings = SubResource("LabelSettings_57gwo")
+horizontal_alignment = 1
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label6" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="Label5" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -84.0
+offset_top = -21.0
+offset_right = -2.0
+offset_bottom = -3.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(41, 10)
+mouse_filter = 1
+text = "a jam game for
+godot wild jam 74
+by connor magson"
+label_settings = SubResource("LabelSettings_57gwo")
+horizontal_alignment = 2
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label5" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
 
 [node name="Label2" type="Label" parent="."]
 layout_mode = 0
@@ -201,9 +558,17 @@ offset_left = 250.0
 offset_top = 97.0
 offset_right = 290.0
 offset_bottom = 113.0
+mouse_filter = 1
 text = "Music"
 label_settings = SubResource("LabelSettings_57gwo")
 horizontal_alignment = 1
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label2" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
 
 [node name="Label3" type="Label" parent="."]
 layout_mode = 0
@@ -211,11 +576,180 @@ offset_left = 250.0
 offset_top = 119.0
 offset_right = 290.0
 offset_bottom = 135.0
+mouse_filter = 1
 text = "SFX"
 label_settings = SubResource("LabelSettings_57gwo")
 horizontal_alignment = 1
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Label3" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="Wasd" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 27.0
+offset_right = 72.0
+offset_bottom = 52.0
+pivot_offset = Vector2(18, 14.5)
+texture = ExtResource("9_xqdp8")
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="Wasd" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = 4.0
+offset_top = 121.0
+offset_right = 92.0
+offset_bottom = 176.0
+script = ExtResource("3_ygnt3")
+
+[node name="Label" type="Label" parent="PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Follow the arrow
+
+Repair the pylons 
+
+Collect gems
+
+beware the spectres"
+label_settings = SubResource("LabelSettings_57gwo")
+horizontal_alignment = 1
+
+[node name="ControlJiggler" parent="PanelContainer" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -44.0
+offset_top = -67.0
+offset_right = 44.0
+offset_bottom = -27.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(43, 21)
+texture = ExtResource("10_pra85")
+script = ExtResource("3_ygnt3")
+
+[node name="ControlJiggler" parent="TextureRect" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="Intro" type="Control" parent="."]
+process_mode = 3
+visible = false
+z_index = 100
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Intro"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.133333, 0.12549, 0.203922, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Intro"]
+libraries = {
+"": SubResource("AnimationLibrary_l3lku")
+}
+
+[node name="Label" type="Label" parent="Intro"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.0
+offset_top = -8.0
+offset_right = 85.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(85, 8)
+text = "a jam game by connor magson"
+
+[node name="ControlJiggler" parent="Intro/Label" instance=ExtResource("4_1rdx6")]
+scale_jiggle = Vector2(0.1, 0.1)
+max_pos_jiggle = Vector2(2, 2)
+decay = 0.7
+
+[node name="Gwj-half-logo-orange" type="Sprite2D" parent="Intro"]
+position = Vector2(288, 32)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("15_cx3yc")
+
+[node name="theme parent" type="Node2D" parent="Intro"]
+position = Vector2(160, 53)
+
+[node name="Gwj-theme" type="Sprite2D" parent="Intro/theme parent"]
+modulate = Color(1, 1, 1, 0)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("11_l0k5i")
+
+[node name="ThemeJiggler" parent="Intro/theme parent" instance=ExtResource("12_llym4")]
+scale_jiggle = Vector2(1.2, 1.2)
+max_skew_jiggle = 1.0
+max_rotation_jiggle = 4.0
+
+[node name="wc1 parent" type="Node2D" parent="Intro"]
+position = Vector2(125.5, 269.1)
+
+[node name="Gwj-wildcard-1" type="Sprite2D" parent="Intro/wc1 parent"]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("12_st5vw")
+
+[node name="Wc1Jiggler" parent="Intro/wc1 parent" instance=ExtResource("12_llym4")]
+scale_jiggle = Vector2(1.2, 1.2)
+max_skew_jiggle = 1.0
+max_rotation_jiggle = 4.0
+
+[node name="wc2 parent" type="Node2D" parent="Intro"]
+position = Vector2(194.5, 269.1)
+
+[node name="Gwj-wildcard-2" type="Sprite2D" parent="Intro/wc2 parent"]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("13_7dehd")
+
+[node name="Wc2Jiggler" parent="Intro/wc2 parent" instance=ExtResource("12_llym4")]
+scale_jiggle = Vector2(1.2, 1.2)
+max_skew_jiggle = 1.0
+max_rotation_jiggle = 4.0
 
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="ColourPrev" to="." method="_on_colour_prev_pressed"]
 [connection signal="pressed" from="ColourNext" to="." method="_on_colour_next_pressed"]
 [connection signal="timeout" from="SpawnEnemyTimer" to="." method="_on_spawn_enemy_timer_timeout"]
+[connection signal="value_changed" from="MasterHSlider" to="." method="_on_master_h_slider_value_changed"]
+[connection signal="value_changed" from="MusicHSlider" to="." method="_on_music_h_slider_value_changed"]
+[connection signal="value_changed" from="SFXHSlider" to="." method="_on_sfxh_slider_value_changed"]
+[connection signal="animation_finished" from="Intro/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

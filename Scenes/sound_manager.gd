@@ -33,8 +33,9 @@ func explode() -> void:
 	explosion_player.play()
 
 func menu_music() -> void:
-	music_player.stream = GWJ_74_MENU
-	music_player.play()
+	if music_player.stream != GWJ_74_MENU:
+		music_player.stream = GWJ_74_MENU
+		music_player.play()
 
 
 func theme_music() -> void:

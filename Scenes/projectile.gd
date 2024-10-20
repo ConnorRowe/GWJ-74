@@ -17,6 +17,8 @@ var target : Node2D = null
 var explode := false
 var reach := 0.0
 
+var nearby_targets : Array[CharacterBody2D] = []
+
 func _process(delta: float) -> void:
 	time_lived += delta
 	if time_lived >= lifetime:
@@ -34,10 +36,14 @@ func initialise(_is_players: bool, _direction: Vector2, _player_stats: PlayerSta
 	
 	$HomingArea2D.monitoring = homing > 0
 	$HomingArea2D/CollisionShape2D.shape.radius = _player_stats.reach * 4
+	if homing > 0:
+		if not is_node_ready():
+			await self.ready
+		$CheckNearestTargetTimer.start()
 
 func _physics_process(delta: float) -> void:
 	if homing > 0 && is_instance_valid(target):
-		direction = direction.move_toward(position.direction_to(target.position), delta * homing * 15)
+		direction = direction.move_toward(position.direction_to(target.position), delta * homing * 40)
 	
 	position += (direction * speed * delta)
 
@@ -73,5 +79,36 @@ func _on_homing_area_2d_body_entered(body: Node2D) -> void:
 	var applicable = (is_players and body is Player) or (not is_players and body is Baddie)
 	
 	if applicable:
-		if not is_instance_valid(target) or position.distance_squared_to(body.position) < position.distance_squared_to(target.position):
-			target = body
+		nearby_targets.append(applicable)
+		if len(nearby_targets) == 1:
+			target = applicable
+
+
+func _on_homing_area_2d_body_exited(body: Node2D) -> void:
+	nearby_targets.erase(body)
+
+
+func _on_check_nearest_target_timer_timeout() -> void:
+	if len(nearby_targets) == 1:
+			target = nearby_targets[0]
+			return
+	
+	var nearest : CharacterBody2D = null
+	var nearest_dist := 99999999.9
+	
+	var bad_chars = []
+	
+	for nearby : CharacterBody2D in nearby_targets:
+		if not is_instance_valid(nearby):
+			bad_chars.append(nearby)
+			continue
+			
+		var dist = nearby.position.distance_squared_to(position)
+		if dist < nearest_dist:
+			nearest = nearby
+			nearest_dist = dist
+	
+	for bad_char in bad_chars:
+		nearby_targets.erase(bad_char)
+	
+	target = nearest

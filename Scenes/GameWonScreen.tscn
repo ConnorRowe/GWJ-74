@@ -1,4 +1,27 @@
-[gd_scene format=3 uid="uid://di7xdeewy5ib7"]
+[gd_scene load_steps=12 format=3 uid="uid://di7xdeewy5ib7"]
+
+[ext_resource type="Theme" uid="uid://k6kepquckgje" path="res://Assets/theme.tres" id="1_pkdb2"]
+[ext_resource type="Texture2D" uid="uid://d0n4yhohd2tlo" path="res://Assets/Textures/background.png" id="2_8pv0x"]
+[ext_resource type="Texture2D" uid="uid://cw4co3ldvglj" path="res://Assets/Textures/special_light_ray.png" id="2_oe42x"]
+[ext_resource type="Script" path="res://Scenes/game_won_screen.gd" id="2_xkoex"]
+[ext_resource type="Script" path="res://Scenes/JiggleControlOnHover.gd" id="3_ngsq7"]
+[ext_resource type="PackedScene" uid="uid://g03jl3msomfx" path="res://Scenes/ControlJiggler.tscn" id="4_0jy3j"]
+[ext_resource type="Texture2D" uid="uid://du3m51nwu746t" path="res://Assets/Textures/heart.png" id="5_5nrc5"]
+[ext_resource type="FontFile" uid="uid://bxpu632mf8itb" path="res://Assets/Font/Connor4px.ttf" id="6_dd0m4"]
+
+[sub_resource type="Curve" id="Curve_ud6mu"]
+min_value = 0.2
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_0hc7l"]
+offsets = PackedFloat32Array(0, 0.38, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.933333, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_hw2rj"]
+min_value = -1.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [node name="GameWonScreen" type="Control"]
 layout_mode = 3
@@ -7,3 +30,129 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_pkdb2")
+script = ExtResource("2_xkoex")
+
+[node name="LightRayParticles" type="CPUParticles2D" parent="."]
+position = Vector2(160, 90)
+scale = Vector2(10, 10)
+amount = 16
+lifetime = 2.0
+preprocess = 1.0
+randomness = 0.13
+local_coords = true
+texture = ExtResource("2_oe42x")
+gravity = Vector2(0, 0)
+angular_velocity_min = -181.82
+angular_velocity_max = 116.37
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.6
+scale_amount_max = 1.2
+scale_amount_curve = SubResource("Curve_ud6mu")
+color = Color(1, 0.68, 0.68, 1)
+color_ramp = SubResource("Gradient_0hc7l")
+hue_variation_max = 1.0
+hue_variation_curve = SubResource("Curve_hw2rj")
+
+[node name="Background" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_8pv0x")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+pivot_offset = Vector2(160, 10)
+mouse_filter = 1
+text = "Congratulations!"
+horizontal_alignment = 1
+script = ExtResource("3_ngsq7")
+
+[node name="ControlJiggler" parent="Label" instance=ExtResource("4_0jy3j")]
+scale_jiggle = Vector2(0.2, 0.2)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 10.0
+decay = 0.7
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 22.0
+offset_right = -16.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(282, 111)
+layout_mode = 2
+text = "With the final pylon repaired, the hero had saved the world. Who was this hero? What world was this, even? These questions will never be answered.
+
+Thank you for playing to the end!"
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "- Connor    "
+horizontal_alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 284.0
+offset_top = 141.0
+offset_right = 302.0
+offset_bottom = 159.0
+pivot_offset = Vector2(9, 9)
+texture = ExtResource("5_5nrc5")
+stretch_mode = 3
+script = ExtResource("3_ngsq7")
+
+[node name="ControlJiggler" parent="TextureRect" instance=ExtResource("4_0jy3j")]
+scale_jiggle = Vector2(0.2, 0.2)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 10.0
+decay = 0.7
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 263.0
+offset_top = 167.0
+offset_right = 304.0
+offset_bottom = 177.0
+theme_override_fonts/font = ExtResource("6_dd0m4")
+theme_override_font_sizes/font_size = 4
+text = "back"
+script = ExtResource("3_ngsq7")
+
+[node name="ControlJiggler" parent="BackButton" instance=ExtResource("4_0jy3j")]
+scale_jiggle = Vector2(0.4, 0.4)
+max_pos_jiggle = Vector2(4, 4)
+max_rotation_jiggle = 2.0
+decay = 0.7
+
+[node name="TransitionColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

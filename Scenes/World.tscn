@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://3sp3bywvuwsd"]
+[gd_scene load_steps=25 format=3 uid="uid://3sp3bywvuwsd"]
 
 [ext_resource type="Script" path="res://Scenes/world.gd" id="1_4u8o6"]
 [ext_resource type="PackedScene" uid="uid://bmkav27727osl" path="res://Scenes/Player.tscn" id="1_quwha"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://bkghjeryeu0d2" path="res://Assets/Textures/homing.png" id="9_lhrv1"]
 [ext_resource type="Texture2D" uid="uid://ckt2kl8233f7t" path="res://Assets/Textures/x2.png" id="10_o1gps"]
 [ext_resource type="PackedScene" uid="uid://ckpabdi1lalkm" path="res://Scenes/Arrow.tscn" id="12_cgtqe"]
+[ext_resource type="Texture2D" uid="uid://d0i1vaprh88ii" path="res://Assets/Textures/ninepatch_4.png" id="13_3dgx2"]
 [ext_resource type="PackedScene" uid="uid://s0o5xsxx6lmw" path="res://Scenes/Pylon.tscn" id="13_us1uq"]
 [ext_resource type="PackedScene" uid="uid://ffsnf3ms7u5j" path="res://Scenes/ShootingBaddie.tscn" id="15_v8vok"]
 
@@ -45,8 +46,20 @@ min_value = -1.0
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bnm5y"]
+texture = ExtResource("13_3dgx2")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
 [node name="World" type="Node2D"]
 process_mode = 1
+y_sort_enabled = true
 script = ExtResource("1_4u8o6")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -59,6 +72,8 @@ offset_right = 320.0
 offset_bottom = 180.0
 texture = ExtResource("3_vnjh6")
 metadata/_edit_use_anchors_ = true
+
+[node name="Modulate" type="CanvasModulate" parent="CanvasLayer"]
 
 [node name="UICanvasLayer" type="CanvasLayer" parent="."]
 process_mode = 3
@@ -86,7 +101,8 @@ offset_bottom = 3.0
 pivot_offset = Vector2(32, 1)
 theme_override_styles/background = SubResource("StyleBoxFlat_6kfie")
 theme_override_styles/fill = SubResource("StyleBoxFlat_cjfgw")
-max_value = 10.0
+max_value = 6.0
+step = 1.0
 show_percentage = false
 
 [node name="XPJiggler" parent="UICanvasLayer/XPBorder" instance=ExtResource("4_t3nb6")]
@@ -105,6 +121,22 @@ offset_right = -67.0
 offset_bottom = 12.0
 grow_horizontal = 0
 text = "1"
+label_settings = SubResource("LabelSettings_i8qwe")
+horizontal_alignment = 2
+justification_flags = 0
+
+[node name="GoalLabel" type="Label" parent="UICanvasLayer"]
+process_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -192.0
+offset_top = 23.0
+offset_right = -128.0
+offset_bottom = 34.0
+grow_horizontal = 0
+pivot_offset = Vector2(32, 5)
+text = "repair pylons!"
 label_settings = SubResource("LabelSettings_i8qwe")
 horizontal_alignment = 2
 justification_flags = 0
@@ -237,6 +269,14 @@ max_pos_jiggle = Vector2(2, 2)
 max_rotation_jiggle = 1.0
 decay = 0.8
 
+[node name="OptionDescLabel" type="Label" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions"]
+custom_minimum_size = Vector2(118, 30)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("4_wenbd")
+theme_override_font_sizes/font_size = 4
+autowrap_mode = 3
+
 [node name="OK Button" type="Button" parent="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions"]
 layout_mode = 2
 size_flags_vertical = 10
@@ -270,7 +310,7 @@ bbcode_enabled = true
 text = "[wave freq=2.0 amp=10]difficulty: chill"
 scroll_active = false
 
-[node name="ColorRect" type="ColorRect" parent="UICanvasLayer"]
+[node name="TransitionColorRect" type="ColorRect" parent="UICanvasLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -280,6 +320,59 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
+
+[node name="GameOverScreen" type="Control" parent="UICanvasLayer"]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("6_yy8ap")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UICanvasLayer/GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -37.0
+offset_top = -61.0
+offset_right = 37.0
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(36, 11)
+bbcode_enabled = true
+text = "[shake]game over..."
+
+[node name="RestartButton" type="Button" parent="UICanvasLayer/GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -23.5
+offset_top = 23.0
+offset_right = 23.5
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_bnm5y")
+text = "restart"
+script = ExtResource("9_iqkd3")
+
+[node name="ControlJiggler" parent="UICanvasLayer/GameOverScreen/RestartButton" instance=ExtResource("4_t3nb6")]
+scale_jiggle = Vector2(0.2, 0.1)
+max_pos_jiggle = Vector2(2, 2)
+max_rotation_jiggle = 1.0
+decay = 0.8
+
+[node name="Modulate" type="CanvasModulate" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("1_quwha")]
 
@@ -396,10 +489,18 @@ xp = 20
 target = NodePath("../Player")
 despawns = false
 
+[connection signal="mouse_entered" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option1" to="." method="_on_option_1_mouse_entered"]
+[connection signal="mouse_exited" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option1" to="." method="_on_option_mouse_exited"]
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option1" to="." method="_on_option_1_pressed"]
+[connection signal="mouse_entered" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option2" to="." method="_on_option_2_mouse_entered"]
+[connection signal="mouse_exited" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option2" to="." method="_on_option_mouse_exited"]
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option2" to="." method="_on_option_2_pressed"]
+[connection signal="mouse_entered" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option3" to="." method="_on_option_3_mouse_entered"]
+[connection signal="mouse_exited" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option3" to="." method="_on_option_mouse_exited"]
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/Option3" to="." method="_on_option_3_pressed"]
 [connection signal="pressed" from="UICanvasLayer/LevelUpScreen/PanelContainer/VBoxContainer/LevelUpOptions/OK Button" to="." method="_on_ok_button_pressed"]
+[connection signal="pressed" from="UICanvasLayer/GameOverScreen/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="dying" from="Player" to="." method="_on_player_dying"]
 [connection signal="lvl_up" from="Player" to="." method="_on_player_lvl_up"]
 [connection signal="xp_changed" from="Player" to="." method="_on_player_xp_changed"]
 [connection signal="timeout" from="SpawnEnemyTimer" to="." method="_on_spawn_enemy_timer_timeout"]

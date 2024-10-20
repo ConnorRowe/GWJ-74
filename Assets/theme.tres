@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=13 format=3 uid="uid://k6kepquckgje"]
+[gd_resource type="Theme" load_steps=19 format=3 uid="uid://k6kepquckgje"]
 
 [ext_resource type="Texture2D" uid="uid://bjeuwl25t18e0" path="res://Assets/Textures/ninepatch_2.png" id="1_akhou"]
 [ext_resource type="Texture2D" uid="uid://c8demdq33j6qg" path="res://Assets/Textures/ninepatch_disabled.png" id="1_bxj00"]
@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://dwppsdvs8k0w4" path="res://Assets/Textures/ninepatch_1.png" id="2_koduo"]
 [ext_resource type="Texture2D" uid="uid://cr26t7pyk3t01" path="res://Assets/Textures/ninepatch_3.png" id="3_gvsnl"]
 [ext_resource type="FontFile" uid="uid://bpeduc0frp0b2" path="res://Assets/Font/ConsFont_v2.ttf" id="5_uiy5e"]
+[ext_resource type="Texture2D" uid="uid://bc42uduev7bp0" path="res://Assets/Textures/grabber_normal.png" id="6_7xlef"]
+[ext_resource type="Texture2D" uid="uid://3ybrvyrfkwbt" path="res://Assets/Textures/grabber_pressed.png" id="7_pxppr"]
+[ext_resource type="Texture2D" uid="uid://c6sulv6r3jjkl" path="res://Assets/Textures/grabber_hover.png" id="8_o7y8m"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_us7u0"]
 texture = ExtResource("1_bxj00")
@@ -62,6 +65,20 @@ expand_margin_top = 2.0
 expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i3eyt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c314y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1jub"]
+bg_color = Color(0.984314, 0.94902, 0.211765, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+expand_margin_top = 1.0
+expand_margin_bottom = 1.0
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_t552w"]
 texture = ExtResource("1_akhou")
 texture_margin_left = 3.0
@@ -80,4 +97,10 @@ Button/styles/focus = SubResource("StyleBoxTexture_ismuf")
 Button/styles/hover = SubResource("StyleBoxTexture_u0gse")
 Button/styles/normal = SubResource("StyleBoxTexture_cbrxy")
 Button/styles/pressed = SubResource("StyleBoxTexture_sqwfd")
+HSlider/icons/grabber = ExtResource("6_7xlef")
+HSlider/icons/grabber_disabled = ExtResource("7_pxppr")
+HSlider/icons/grabber_highlight = ExtResource("8_o7y8m")
+HSlider/styles/grabber_area = SubResource("StyleBoxEmpty_i3eyt")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxEmpty_c314y")
+HSlider/styles/slider = SubResource("StyleBoxFlat_p1jub")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_t552w")

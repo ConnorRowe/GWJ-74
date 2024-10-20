@@ -55,7 +55,6 @@ animations = [{
 size = Vector2(8, 3)
 
 [node name="Pylon" type="Node2D"]
-y_sort_enabled = true
 script = ExtResource("1_u7ic5")
 
 [node name="BeamStart" type="AnimatedSprite2D" parent="."]
@@ -89,8 +88,9 @@ decay = 4.0
 
 [node name="PressurePlateSprite" type="Sprite2D" parent="."]
 y_sort_enabled = true
-position = Vector2(0, 10)
+position = Vector2(0, 12)
 texture = ExtResource("2_rgn06")
+offset = Vector2(0, -2)
 hframes = 2
 
 [node name="PressurePlateArea2D" type="Area2D" parent="PressurePlateSprite"]
@@ -98,7 +98,7 @@ input_pickable = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PressurePlateSprite/PressurePlateArea2D"]
-position = Vector2(0, 0.5)
+position = Vector2(0, -2)
 shape = SubResource("RectangleShape2D_kwlup")
 
 [node name="ExplosionLocations" type="Node2D" parent="."]
